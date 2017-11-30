@@ -8,6 +8,39 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Pango = imports.gi.Pango;
 const Manager = Me.imports.dbus_manager;
+const Lyrics = Me.imports.lyrics_api;
+
+const LyricsPanel = new Lang.Class({
+    Name: 'Popup',
+    Extends: PopupMenu.PopupBaseMenuItem,
+
+    _init: function () {
+        this.parent({
+            hover: false,
+            activate: false,
+            can_focus: true,
+        });
+        this.lyrics = '... No lyrics ...';
+
+        this.label = new St.Label({ text: this.lyrics, style: 'padding:5px' });
+        this.label.clutter_text.line_wrap = true;
+        this.label.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
+        this.label.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
+
+        this.box = new St.BoxLayout({
+            vertical: true,
+            width: 400,
+            style: 'spacing: 5px;'
+        });
+        this.actor.add(this.box);
+        this.box.add(this.label, { x_fill: false, x_align: St.Align.MIDDLE });
+    },
+
+    set_lyrics: function (l) {
+        this.lyrics = l;
+        this.label.text = this.lyrics;
+    }
+});
 
 const Popup = new Lang.Class({
     Name: 'Popup',
@@ -20,6 +53,8 @@ const Popup = new Lang.Class({
             can_focus: true,
         });
 
+        this.lyrics_finder = new Lyrics.LyricsFinder();
+
         this.createUi();
 
     },
@@ -27,8 +62,8 @@ const Popup = new Lang.Class({
     createUi: function () {
         this.box = new St.BoxLayout({
             vertical: true,
-            width: 200,
-            style: 'spacing: 5px;' 
+            width: 400,
+            style: 'spacing: 5px;'
         });
         this.actor.add(this.box);
 
@@ -61,10 +96,35 @@ const Popup = new Lang.Class({
             style_class: 'system-menu-action'
         });
 
+        this.search_btn.connect('clicked', Lang.bind(this, () => {
+            let title = this.titleEntry.text;
+            let artist = this.artistEntry.text;
+
+            if (title.trim().length < 3) {
+                return;
+            }
+
+            if (search_menu) {
+                search_menu.destroy();
+                search_menu = null;
+            }
+            this.lyrics_finder.find_lyrics(title, artist,
+                Lang.bind(this, (songs) => {
+                    search_menu = new PopupMenu.PopupSubMenuMenuItem(`Found: ${songs.length}`);
+                    if (songs.length > 0) {
+                        songs.forEach((song) => {
+                            search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song.name , song.album.blurPicUrl || song.album.picUrl || ''));
+                        });
+                    }
+                    button.add_item(search_menu);
+
+                }));
+        }));
+
         this.box.add(this.search_btn, { x_fill: false, x_align: St.Align.MIDDLE });
 
-        this.manager = new Manager.PlayerManager(Lang.bind(this ,(title ,artist) => {
-            if(!title || !artist){
+        this.manager = new Manager.PlayerManager(Lang.bind(this, (title, artist) => {
+            if (!title || !artist) {
                 title = artist = '';
             }
             this.titleEntry.text = title;
@@ -73,7 +133,7 @@ const Popup = new Lang.Class({
 
     },
 
-    disconnect: function(){
+    disconnect: function () {
         this.manager.disconnect_all();
     }
 
@@ -100,15 +160,14 @@ const Button = new Lang.Class({
 
         popup = new Popup();
         this.menu.addMenuItem(popup);
-        // this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-
-        // fav_menu = new PopupMenu.PopupSubMenuMenuItem('Favorites');
-        // this.menu.addMenuItem(fav_menu);
+        //this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
         // let channelsMenu = new PopupMenu.PopupSubMenuMenuItem('Channels');
         // this.menu.addMenuItem(channelsMenu);
-
     },
+    add_item: function (item) {
+        this.menu.addMenuItem(item);
+    }
 });
 
 
@@ -117,6 +176,8 @@ function init() {
 
 let button;
 let popup;
+let search_menu;
+let lyrics_panel;
 
 function enable() {
     button = new Button();
