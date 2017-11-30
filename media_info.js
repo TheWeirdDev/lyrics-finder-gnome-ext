@@ -44,8 +44,10 @@ var MediaInfo = new Lang.Class({
 
         let trackArtist = metadata["xesam:artist"] ? metadata["xesam:artist"].deep_unpack().join('/') : "";
         trackArtist = metadata["rhythmbox:streamTitle"] ? metadata["rhythmbox:streamTitle"].unpack() : trackArtist;
-        if (title.trim().length == 0)
+        if (title.trim().length == 0){
+            this._callback();
             return;
+        }
 
         let txt = `${title} : ${trackArtist}`;
         this._callback(title,trackArtist);
@@ -54,6 +56,6 @@ var MediaInfo = new Lang.Class({
 
     disconnect: function () {
         this._prop.disconnectSignal(this._propChangedId);
-        this._callback('' , '');
+        this._callback();
     }
 });

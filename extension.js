@@ -64,6 +64,9 @@ const Popup = new Lang.Class({
         this.box.add(this.search_btn, { x_fill: false, x_align: St.Align.MIDDLE });
 
         this.manager = new Manager.PlayerManager(Lang.bind(this ,(title ,artist) => {
+            if(!title || !artist){
+                title = artist = '';
+            }
             this.titleEntry.text = title;
             this.artistEntry.text = artist;
         }));
