@@ -22,23 +22,45 @@ const LyricsPanel = new Lang.Class({
         });
         this.lyrics = '... No lyrics ...';
 
-        this.label = new St.Label({ text: this.lyrics, style: 'padding:5px' });
+        this.label = new St.Label({ text: this.lyrics, style: 'padding:5px;text-align:center;font-size:1.2em;'});
         this.label.clutter_text.line_wrap = true;
         this.label.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
         this.label.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
 
         this.box = new St.BoxLayout({
             vertical: true,
-            width: 400,
+            width: 350,
             style: 'spacing: 5px;'
         });
-        this.actor.add(this.box);
-        this.box.add(this.label, { x_fill: false, x_align: St.Align.MIDDLE });
+        this.imgbox = new St.BoxLayout({
+            vertical: true,
+            style: 'margin-bottom: 10px;'
+        });
+        this.icon = new St.Icon({
+            icon_size: 130,
+        });
+        this.scrollView = new St.ScrollView();
+        this.scrollView._delegate = this;
+        this.scrollView.clip_to_allocation = true;
+
+        this.scrollView.add_actor(this.box);
+
+        this.imgbox.add(this.icon , { x_fill: false, x_align: St.Align.MIDDLE });    
+        this.icon.hide();    
+        this.box.add(this.label , { x_fill: false, x_align: St.Align.MIDDLE });
+        this.actor.set_vertical(true);
+        this.actor.add(this.imgbox);
+        this.actor.add(this.scrollView);
+        this.scrollView.hide();
+        
     },
 
-    set_lyrics: function (l) {
-        this.lyrics = l;
+    setLyrics: function (lrc , pic) {
+        this.lyrics = lrc;
         this.label.text = this.lyrics;
+        this.scrollView.show();
+        this.icon.gicon = Gio.icon_new_for_string(pic);
+        this.icon.show();  
     }
 });
 
@@ -62,7 +84,7 @@ const Popup = new Lang.Class({
     createUi: function () {
         this.box = new St.BoxLayout({
             vertical: true,
-            width: 400,
+            width: 350,
             style: 'spacing: 5px;'
         });
         this.actor.add(this.box);
@@ -97,6 +119,10 @@ const Popup = new Lang.Class({
         });
 
         this.search_btn.connect('clicked', Lang.bind(this, () => {
+            if (this.loading) {
+                return;
+            }
+
             let title = this.titleEntry.text;
             let artist = this.artistEntry.text;
 
@@ -104,23 +130,11 @@ const Popup = new Lang.Class({
                 return;
             }
 
-            if (search_menu) {
+            if (search_menu != null) {
                 search_menu.destroy();
                 search_menu = null;
             }
-            this.lyrics_finder.find_lyrics(title, artist,
-                Lang.bind(this, (songs) => {
-                    search_menu = new PopupMenu.PopupSubMenuMenuItem(`Found: ${songs.length}`);
-                    if (songs.length > 0) {
-                        songs.forEach((song) => {
-                            search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song));
-                        });
-                    } else {
-                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem({name:"No lyrics found"}));
-                    }
-                    button.add_item(search_menu);
-
-                }));
+            this.searchSong(title, artist);
         }));
 
         this.box.add(this.search_btn, { x_fill: false, x_align: St.Align.MIDDLE });
@@ -128,11 +142,76 @@ const Popup = new Lang.Class({
         this.manager = new Manager.PlayerManager(Lang.bind(this, (title, artist) => {
             if (!title || !artist) {
                 title = artist = '';
+                this.titleEntry.text = title;
+                this.artistEntry.text = artist;
+                if(this.lrcPanel){
+                    this.lrcPanel.destroy();
+                    this.lrcPanel = null;
+                }
+                if (search_menu != null) {
+                    search_menu.destroy();
+                    search_menu = null;
+                }
+                return;
             }
-            this.titleEntry.text = title;
-            this.artistEntry.text = artist;
+            if (this.titleEntry.text != title || this.artistEntry.text != artist) {
+                this.titleEntry.text = title;
+                this.artistEntry.text = artist;
+                this.searchSong(title, artist);
+            }
         }));
 
+
+    },
+
+    searchSong: function (title, artist) {
+        this.setLoading(false);        
+        this.setLoading(true);
+
+        if(this.lrcPanel){
+            this.lrcPanel.destroy();
+            this.lrcPanel = null;
+        }
+
+        this.lrcPanel = new LyricsPanel();        
+        this.lyrics_finder.find_lyrics(title, artist,
+            Lang.bind(this, (songs) => {
+
+                if (search_menu != null) {
+                    search_menu.destroy();
+                    search_menu = null;
+                }
+                search_menu = new PopupMenu.PopupSubMenuMenuItem(`Found: ${songs.length}`);
+                if (songs.length > 0) {
+                    songs.forEach((song) => {
+                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song , this.lrcPanel , search_menu));
+                    });
+                } else {
+                    search_menu.menu.addMenuItem(new Lyrics.LyricsItem({ name: "No lyrics found" , artists:[{name:"Error"}]}));
+                }
+                button.add_item(search_menu);
+                button.add_item(this.lrcPanel);
+                if(songs.length > 0)
+                    search_menu.menu.firstMenuItem.activate();
+                this.setLoading(false);
+            }));
+    },
+
+    setLoading: function (state) {
+        this.loading = state;
+        if (!state) {
+            if (this.spinner && this.loadtxt) {
+                this.spinner.actor.destroy();
+                this.loadtxt.destroy();
+            }
+            return;
+        }
+        let spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
+        this.spinner = new Animation.AnimatedIcon(spinnerIcon, 16);
+        this.spinner.play();
+        this.loadtxt = new St.Label({ text: "Searching..." });
+        this.box.add(this.loadtxt, { x_fill: false, x_align: St.Align.MIDDLE });
+        this.box.add_child(this.spinner.actor);
     },
 
     disconnect: function () {
@@ -153,7 +232,7 @@ const Button = new Lang.Class({
         });
         let icon = new St.Icon({
             // gicon: Gio.icon_new_for_string(Extension.path + '/radio-symbolic.svg'),
-            icon_name: 'gtk-refresh',
+            gicon: Gio.icon_new_for_string(Me.path + "/music-symbolic.svg"),
             style_class: 'system-status-icon',
         });
         box.add_actor(icon);
@@ -162,10 +241,7 @@ const Button = new Lang.Class({
 
         popup = new Popup();
         this.menu.addMenuItem(popup);
-        //this.menu.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
 
-        // let channelsMenu = new PopupMenu.PopupSubMenuMenuItem('Channels');
-        // this.menu.addMenuItem(channelsMenu);
     },
     add_item: function (item) {
         this.menu.addMenuItem(item);
