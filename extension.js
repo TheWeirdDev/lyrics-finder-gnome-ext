@@ -100,7 +100,7 @@ const Popup = new Lang.Class({
             let title = this.titleEntry.text;
             let artist = this.artistEntry.text;
 
-            if (title.trim().length < 3) {
+            if (title.trim().length < 1) {
                 return;
             }
 
@@ -113,8 +113,10 @@ const Popup = new Lang.Class({
                     search_menu = new PopupMenu.PopupSubMenuMenuItem(`Found: ${songs.length}`);
                     if (songs.length > 0) {
                         songs.forEach((song) => {
-                            search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song.name , song.album.blurPicUrl || song.album.picUrl || ''));
+                            search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song));
                         });
+                    } else {
+                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem({name:"No lyrics found"}));
                     }
                     button.add_item(search_menu);
 
