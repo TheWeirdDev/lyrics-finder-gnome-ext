@@ -9,6 +9,7 @@ const PopupMenu = imports.ui.popupMenu;
 const Pango = imports.gi.Pango;
 const Manager = Me.imports.dbus_manager;
 const Lyrics = Me.imports.lyrics_api;
+const Storage = Me.imports.storage;
 
 const LyricsPanel = new Lang.Class({
     Name: 'Popup',
@@ -156,19 +157,17 @@ const Popup = new Lang.Class({
                 }
                 return;
             }
-            if (this.titleEntry.text != title || this.artistEntry.text != artist) {
+            //if (this.titleEntry.text != title || this.artistEntry.text != artist) {
                 this.titleEntry.text = title;
                 this.artistEntry.text = artist;
                 this.searchSong(title, artist);
-            }
+          //  }
         }));
 
 
     },
 
     searchSong: function (title, artist) {
-        this.setLoading(false);
-        this.setLoading(true);
 
         if (this.lrcPanel) {
             this.lrcPanel.destroy();
@@ -176,27 +175,38 @@ const Popup = new Lang.Class({
         }
 
         this.lrcPanel = new LyricsPanel();
-        this.lyrics_finder.find_lyrics(title, artist,
-            Lang.bind(this, (songs) => {
+        let storage_manager = new Storage.StorageManager();
+        if (storage_manager.is_lyrics_available(title, artist)) {
+            this.lrcPanel.setLyrics(storage_manager.get_lyrics(title, artist), storage_manager.get_image(title, artist));
+            button.add_item(this.lrcPanel);
+        } else {
+            this.setLoading(false);
+            this.setLoading(true);
 
-                if (search_menu != null) {
-                    search_menu.destroy();
-                    search_menu = null;
-                }
-                search_menu = new PopupMenu.PopupSubMenuMenuItem(`Found: ${songs.length}`);
-                if (songs.length > 0) {
-                    songs.forEach((song) => {
-                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song, this.lrcPanel, search_menu));
-                    });
-                } else {
-                    search_menu.menu.addMenuItem(new Lyrics.LyricsItem({ name: "No lyrics found", artists: [{ name: "Error" }] }));
-                }
-                button.add_item(search_menu);
-                button.add_item(this.lrcPanel);
-                if (songs.length > 0)
-                    search_menu.menu.firstMenuItem.activate();
-                this.setLoading(false);
-            }));
+            this.lyrics_finder.find_lyrics(title, artist,
+                Lang.bind(this, (songs) => {
+
+                    if (search_menu != null) {
+                        search_menu.destroy();
+                        search_menu = null;
+                    }
+                    search_menu = new PopupMenu.PopupSubMenuMenuItem(`Found: ${songs.length}`);
+                    if (songs.length > 0) {
+                        songs.forEach((song) => {
+                            search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song, this.lrcPanel, search_menu,
+                                 storage_manager, title, artist));
+                        });
+                    } else {
+                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem({ name: "No lyrics found", artists: [{ name: "Error" }] }));
+                    }
+                    button.add_item(search_menu);
+                    button.add_item(this.lrcPanel);
+                    if (songs.length > 1)
+                        search_menu.menu.firstMenuItem.activate();
+                    this.setLoading(false);
+                }));
+        }
+
     },
 
     setLoading: function (state) {

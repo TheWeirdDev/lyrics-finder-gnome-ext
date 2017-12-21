@@ -12,8 +12,8 @@ var LyricsFinder = new Lang.Class({
         //Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
 
     },
-    find_lyrics: function (name, artist, callback) {
-        this.request = Soup.Message.new('POST', `http://music.163.com/api/search/pc?s=${name} ${artist}&type=1&limit=10`);
+    find_lyrics: function (title, artist, callback) {
+        this.request = Soup.Message.new('POST', `http://music.163.com/api/search/pc?s=${title} ${artist}&type=1&limit=10`);
         this.httpSession.queue_message(this.request, (httpSession, message) => {
             if (message.status_code == 200) {
                 let data = JSON.parse(message.response_body.data);
@@ -37,11 +37,15 @@ var LyricsItem = new Lang.Class({
     Name: 'LyricsItem',
     Extends: PopupMenu.PopupBaseMenuItem,
 
-    _init: function (song , lyrics_panel , search_menu) {
+    _init: function (song , lyrics_panel , search_menu ,storage_manager ,title , artist) {
         this.parent({
             reactive: true,
             can_focus: true,
         });
+        this._title = title;
+        this._artist = artist;
+
+        this.storage_manager = storage_manager;
 
         this.search_menu = search_menu;
 
@@ -88,7 +92,8 @@ var LyricsItem = new Lang.Class({
                     }
                     this.lyrics = this.removeTimes(data.lrc.lyric);
 
-                    this.lyrics_panel.setLyrics(this.lyrics ,this.picUrl );
+                    this.lyrics_panel.setLyrics(this.lyrics ,this.picUrl);
+                    this.storage_manager.save(this._title , this._artist , this.lyrics , this.picUrl);
                 } else {
                     this.lyrics_panel.setLyrics("Network Error" , '');
                 }
