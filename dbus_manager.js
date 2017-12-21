@@ -26,7 +26,7 @@ var PlayerManager = new Lang.Class({
             playerNames.sort();
             for (let i in playerNames) {
                 let player = playerNames[i];
-                this._dbus.GetNameOwnerRemote(player, Lang.bind(this, function (owner) {
+                this._dbus.GetNameOwnerRemote(player, Lang.bind(this, (owner) => {
                     this.add_player(player, owner);
                 }));
             }
@@ -73,7 +73,7 @@ var PlayerManager = new Lang.Class({
                 this.remove_player(this.players[owner], owner);
             }
         }catch(e){
-            global.log(e,"Error disconnecting player")
+            global.log(e,"Error disconnecting player");
         }
         this._dbus.disconnectSignal(this._ownerChangedId);
     }

@@ -9,7 +9,7 @@ var LyricsFinder = new Lang.Class({
     Name: 'LyricsFinder',
     _init: function () {
         this.httpSession = new Soup.SessionAsync();
-        Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
+        //Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
 
     },
     find_lyrics: function (name, artist, callback) {
@@ -54,7 +54,7 @@ var LyricsItem = new Lang.Class({
 
         this.lyrics_panel = lyrics_panel;
 
-        this.vbox = new St.BoxLayout({ vertical: false, width: 350 });
+        this.vbox = new St.BoxLayout({ vertical: false, width: 300 });
         this.actor.add_child(this.vbox);
 
         let icon2 = new St.Icon({
@@ -71,7 +71,8 @@ var LyricsItem = new Lang.Class({
         this.vbox.add_child(box2);
         box2.add(label1, { y_fill: false, y_align: St.Align.MIDDLE });
 
-        this.httpSession = new Soup.SessionAsync();        
+        this.httpSession = new Soup.SessionAsync();   
+        //Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());     
 
     },
 

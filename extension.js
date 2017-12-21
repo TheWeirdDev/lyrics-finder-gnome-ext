@@ -22,7 +22,7 @@ const LyricsPanel = new Lang.Class({
         });
         this.lyrics = '... No lyrics ...';
 
-        this.label = new St.Label({ text: this.lyrics, style: 'padding:5px;text-align:center;font-size:1.2em;'});
+        this.label = new St.Label({ text: this.lyrics, style: 'padding:5px;text-align:center;font-size:1.2em;' });
         this.label.clutter_text.line_wrap = true;
         this.label.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
         this.label.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
@@ -45,22 +45,24 @@ const LyricsPanel = new Lang.Class({
 
         this.scrollView.add_actor(this.box);
 
-        this.imgbox.add(this.icon , { x_fill: false, x_align: St.Align.MIDDLE });    
-        this.icon.hide();    
-        this.box.add(this.label , { x_fill: false, x_align: St.Align.MIDDLE });
+        this.imgbox.add(this.icon, { x_fill: false, x_align: St.Align.MIDDLE });
+        this.icon.hide();
+        this.box.add(this.label, { x_fill: false, x_align: St.Align.MIDDLE });
         this.actor.set_vertical(true);
         this.actor.add(this.imgbox);
         this.actor.add(this.scrollView);
         this.scrollView.hide();
-        
+
     },
 
-    setLyrics: function (lrc , pic) {
+    setLyrics: function (lrc, pic) {
         this.lyrics = lrc;
         this.label.text = this.lyrics;
         this.scrollView.show();
-        this.icon.gicon = Gio.icon_new_for_string(pic);
-        this.icon.show();  
+        if (pic) {
+            this.icon.gicon = Gio.icon_new_for_string(pic);
+            this.icon.show();
+        }
     }
 });
 
@@ -144,7 +146,7 @@ const Popup = new Lang.Class({
                 title = artist = '';
                 this.titleEntry.text = title;
                 this.artistEntry.text = artist;
-                if(this.lrcPanel){
+                if (this.lrcPanel) {
                     this.lrcPanel.destroy();
                     this.lrcPanel = null;
                 }
@@ -165,15 +167,15 @@ const Popup = new Lang.Class({
     },
 
     searchSong: function (title, artist) {
-        this.setLoading(false);        
+        this.setLoading(false);
         this.setLoading(true);
 
-        if(this.lrcPanel){
+        if (this.lrcPanel) {
             this.lrcPanel.destroy();
             this.lrcPanel = null;
         }
 
-        this.lrcPanel = new LyricsPanel();        
+        this.lrcPanel = new LyricsPanel();
         this.lyrics_finder.find_lyrics(title, artist,
             Lang.bind(this, (songs) => {
 
@@ -184,14 +186,14 @@ const Popup = new Lang.Class({
                 search_menu = new PopupMenu.PopupSubMenuMenuItem(`Found: ${songs.length}`);
                 if (songs.length > 0) {
                     songs.forEach((song) => {
-                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song , this.lrcPanel , search_menu));
+                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song, this.lrcPanel, search_menu));
                     });
                 } else {
-                    search_menu.menu.addMenuItem(new Lyrics.LyricsItem({ name: "No lyrics found" , artists:[{name:"Error"}]}));
+                    search_menu.menu.addMenuItem(new Lyrics.LyricsItem({ name: "No lyrics found", artists: [{ name: "Error" }] }));
                 }
                 button.add_item(search_menu);
                 button.add_item(this.lrcPanel);
-                if(songs.length > 0)
+                if (songs.length > 0)
                     search_menu.menu.firstMenuItem.activate();
                 this.setLoading(false);
             }));
@@ -231,7 +233,6 @@ const Button = new Lang.Class({
             style_class: 'panel-status-menu-box'
         });
         let icon = new St.Icon({
-            // gicon: Gio.icon_new_for_string(Extension.path + '/radio-symbolic.svg'),
             gicon: Gio.icon_new_for_string(Me.path + "/music-symbolic.svg"),
             style_class: 'system-status-icon',
         });
