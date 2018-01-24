@@ -11,5 +11,6 @@
   ], 
   "url": "http://github.com/alireza6677/lyrics-finder-gnome-ext", 
   "uuid": "LyricsFinder@alireza6677.gmail.com", 
-  "version": 1
+  "version": 1,
+  "settings-schema": "org.gnome.shell.extensions.lyrics-finder"
 }

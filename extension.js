@@ -7,9 +7,18 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Pango = imports.gi.Pango;
+const Shell = imports.gi.Shell;
+
 const Manager = Me.imports.dbus_manager;
 const Lyrics = Me.imports.lyrics_api;
 const Storage = Me.imports.storage;
+const Convenience = Me.imports.convenience;
+const Keys = Me.imports.keys;
+
+const ALIGN_MIDDLE_X = { x_fill: false, x_align: St.Align.MIDDLE };
+const ALIGN_MIDDLE_Y = { y_fill: false, y_align: St.Align.MIDDLE };
+
+const settings = Convenience.getSettings();
 
 const LyricsPanel = new Lang.Class({
     Name: 'Popup',
@@ -21,9 +30,13 @@ const LyricsPanel = new Lang.Class({
             activate: false,
             can_focus: true,
         });
-        this.lyrics = '... No lyrics ...';
+        this.lyrics = '... No lyrics ...\nJust play a music!';
 
-        this.label = new St.Label({ text: this.lyrics, style: 'padding:5px;text-align:center;font-size:1.2em;' });
+        this.label = new St.Label({
+            text: this.lyrics,
+            style: this.getLyricsStyle()
+
+        });
         this.label.clutter_text.line_wrap = true;
         this.label.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
         this.label.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
@@ -33,37 +46,114 @@ const LyricsPanel = new Lang.Class({
             width: 350,
             style: 'spacing: 5px;'
         });
-        this.imgbox = new St.BoxLayout({
-            vertical: true,
-            style: 'margin-bottom: 10px;'
-        });
-        this.icon = new St.Icon({
-            icon_size: 130,
-        });
+
+
         this.scrollView = new St.ScrollView();
         this.scrollView._delegate = this;
         this.scrollView.clip_to_allocation = true;
 
         this.scrollView.add_actor(this.box);
+        this.icon = new St.Icon({
+            icon_size: this.getCoverSize(),
+        });
+        this.box.add(this.icon, ALIGN_MIDDLE_X);
 
-        this.imgbox.add(this.icon, { x_fill: false, x_align: St.Align.MIDDLE });
-        this.icon.hide();
-        this.box.add(this.label, { x_fill: false, x_align: St.Align.MIDDLE });
+        if (!this.isCoverEnabled()) {
+            this.icon.hide();
+        }
+
+        settings.connect('changed::' + Keys.ENABLE_COVER, () => {
+            if (this.isCoverEnabled()) {
+                this.icon.show();
+            } else {
+                this.icon.hide();
+            }
+        });
+
+        this.box.add(this.label, ALIGN_MIDDLE_X);
         this.actor.set_vertical(true);
-        this.actor.add(this.imgbox);
         this.actor.add(this.scrollView);
-        this.scrollView.hide();
 
+        settings.connect('changed::' + Keys.COVER_SIZE, () => {
+            this.icon.icon_size = this.getCoverSize();
+        });
+
+        settings.connect('changed::' + Keys.TEXT_SIZE, () => {
+            this.label.style = this.getLyricsStyle();
+        });
+
+        settings.connect('changed::' + Keys.FONT_NAME, () => {
+            this.label.style = this.getLyricsStyle();
+        });
+
+        settings.connect('changed::' + Keys.TEXT_ALIGN, () => {
+            this.label.style = this.getLyricsStyle();
+        });
+    },
+
+    getCoverSize: function () {
+        let size = settings.get_int(Keys.COVER_SIZE);
+        size = size < 80 ? 80 : size;
+        size = size > 200 ? 200 : size;
+        return size;
+    },
+
+    getLyricsStyle() {
+        const fontName = settings.get_string(Keys.FONT_NAME).split(' ');
+
+        let name = [];
+        let fontWeight = 'normal';
+        let fontStyle = 'normal';
+
+        for (let i = 0; i < fontName.length; i++) {
+            switch (fontName[i]) {
+                case 'Regular':
+                    fontWeight = 'normal';
+                    break;
+                case 'Bold':
+                    fontWeight = 'bold';
+                    break;
+                case 'Italic':
+                    fontStyle = 'italic';
+                    break;
+                case 'Oblique':
+                    fontStyle = 'oblique';
+                    break;
+
+                default:
+                    name.push(fontName[i]);
+            }
+        }
+        name = name.join(' ');
+
+        return `padding: 10px;
+                font-size: ${settings.get_int(Keys.TEXT_SIZE)}pt;
+                text-align: ${settings.get_string(Keys.TEXT_ALIGN)};
+                font-family: "${name}";
+                font-weight: ${fontWeight};
+                font-style: ${fontStyle};`;
     },
 
     setLyrics: function (lrc, pic) {
-        this.lyrics = lrc;
+        this.lyrics = lrc.trim();
         this.label.text = this.lyrics;
         this.scrollView.show();
-        if (pic) {
-            this.icon.gicon = Gio.icon_new_for_string(pic);
+        if (pic && this.isCoverEnabled()) {
+            const gicon = Gio.icon_new_for_string(pic);
+            if (gicon != null)
+                this.icon.gicon = gicon;
+            else
+                this.icon.icon_name = Me.path + '/album-art-empty.png';
             this.icon.show();
         }
+    },
+
+    isCoverEnabled: function () {
+        return settings.get_boolean(Keys.ENABLE_COVER);
+    },
+
+    reset: function () {
+        this.setLyrics('... No lyrics ...\nJust play a music!', Me.path + '/album-art-empty.png');
     }
 });
 
@@ -80,11 +170,14 @@ const Popup = new Lang.Class({
 
         this.lyrics_finder = new Lyrics.LyricsFinder();
 
+
         this.createUi();
 
     },
 
     createUi: function () {
+
+
         this.box = new St.BoxLayout({
             vertical: true,
             width: 350,
@@ -92,10 +185,29 @@ const Popup = new Lang.Class({
         });
         this.actor.add(this.box);
 
-        this.search_label = new St.Label({
-            text: "Search lyrics",
+        this.topBox = new St.BoxLayout({
+            vertical: false,
+            style: 'spacing: 10px;',
+        });
+
+        this.searchLabel = new St.Label({
+            text: "Lyrics Finder",
             style: 'font-weight: bold',
         });
+        this.topBox.add(this.searchLabel, ALIGN_MIDDLE_Y);
+
+        this.prefsBtn = new St.Button({
+            child: new St.Icon({
+                icon_name: 'emblem-system-symbolic',
+                icon_size: 15,
+            }),
+            reactive: true,
+            can_focus: true,
+            style_class: 'system-menu-action'
+        });
+        this.prefsBtn.connect('clicked', launch_extension_prefs);
+
+        this.topBox.add_child(this.prefsBtn);
 
         this.titleEntry = new St.Entry({
             name: "Title",
@@ -111,105 +223,111 @@ const Popup = new Lang.Class({
             can_focus: true
         });
 
-        this.box.add(this.search_label, { x_fill: false, x_align: St.Align.MIDDLE });
+        this.box.add(this.topBox, ALIGN_MIDDLE_X);
         this.box.add_child(this.titleEntry);
         this.box.add_child(this.artistEntry);
 
+        this.SearchBox = new St.BoxLayout({
+            vertical: false,
+            style: 'spacing: 3px;',
+        });
+        this.SearchBox.add(new St.Icon({ icon_name: 'gtk-find', icon_size: 20 }), ALIGN_MIDDLE_Y);
+        this.SearchBox.add(new St.Label({ text: 'Search' }), ALIGN_MIDDLE_Y);
+
         this.search_btn = new St.Button({
-            label: 'Search',
+            child: this.SearchBox,
             reactive: true,
             style_class: 'system-menu-action'
         });
 
-        this.search_btn.connect('clicked', Lang.bind(this, function() {
+        this.search_btn.connect('clicked', Lang.bind(this, function () {
             if (this.loading) {
                 return;
             }
 
-            let title = this.titleEntry.text;
-            let artist = this.artistEntry.text;
+            const title = this.titleEntry.text;
+            const artist = this.artistEntry.text;
 
             if (title.trim().length < 1) {
                 return;
             }
-
-            if (search_menu != null) {
-                search_menu.destroy();
-                search_menu = null;
-            }
             this.searchSong(title, artist);
+            search_menu.menu.removeAll();
+            search_menu.label.set_text('Found: 0');
         }));
 
-        this.box.add(this.search_btn, { x_fill: false, x_align: St.Align.MIDDLE });
+        this.box.add(this.search_btn, ALIGN_MIDDLE_X);
 
-        this.manager = new Manager.PlayerManager(Lang.bind(this, function(title, artist) {
-            if (!title || !artist) {
+        this.manager = new Manager.PlayerManager(Lang.bind(this, function (title, artist) {
+            if (!title) {
                 title = artist = '';
                 this.titleEntry.text = title;
                 this.artistEntry.text = artist;
-                if (this.lrcPanel) {
-                    this.lrcPanel.destroy();
-                    this.lrcPanel = null;
-                }
-                if (search_menu != null) {
-                    search_menu.destroy();
-                    search_menu = null;
-                }
+
+                lrcPanel.reset();
+
+                search_menu.menu.removeAll();
+                search_menu.label.set_text('Found: 0');
                 return;
+            }
+            if (settings.get_boolean(Keys.REMOVE_EXTRAS)) {
+                title = title.replace(/\(.*\)/,'').replace(/\[.*\]/,'').replace(/::.*::/,'').trim();
+                if (artist)
+                    artist = artist.replace(/\(.*\)/,'').replace(/\[.*\]/,'').replace(/::.*::/,'').trim();
             }
 
             this.titleEntry.text = title;
             this.artistEntry.text = artist;
-            this.searchSong(title, artist);
+
+            const storage_manager = new Storage.StorageManager();
+
+            if (storage_manager.is_lyrics_available(title, artist)) {
+                this.loadSong(title, artist);
+            } else {
+                this.searchSong(title, artist);
+            }
+
         }));
 
+    },
+    loadSong: function (title, artist) {
+        lrcPanel.reset();
 
+        const storage_manager = new Storage.StorageManager();
+        lrcPanel.setLyrics(storage_manager.get_lyrics(title, artist),
+            storage_manager.get_image(title, artist));
     },
 
     searchSong: function (title, artist) {
 
-        if (this.lrcPanel) {
-            this.lrcPanel.destroy();
-            this.lrcPanel = null;
-        }
+        lrcPanel.reset();
 
-        this.lrcPanel = new LyricsPanel();
-        let storage_manager = new Storage.StorageManager();
+        const storage_manager = new Storage.StorageManager();
 
         this.setLoading(false);
         this.setLoading(true);
 
         this.lyrics_finder.find_lyrics(title, artist,
-            Lang.bind(this, function(songs) {
+            Lang.bind(this, function (songs) {
 
-                if (search_menu != null) {
-                    search_menu.destroy();
-                    search_menu = null;
-                }
-                search_menu = new PopupMenu.PopupSubMenuMenuItem(`Found: ${songs.length}`);
-                button.add_item(search_menu);
+                search_menu.menu.removeAll();
+                search_menu.label.set_text(`Found: ${songs.length}`);
 
                 if (songs.length > 0) {
                     songs.forEach((song) => {
-                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song, this.lrcPanel, search_menu,
+                        search_menu.menu.addMenuItem(new Lyrics.LyricsItem(song, lrcPanel, search_menu,
                             storage_manager, title, artist));
                     });
+
+                    search_menu.menu.firstMenuItem.activate();
+
                 } else {
                     search_menu.menu.addMenuItem(new Lyrics.LyricsItem({ name: "No lyrics found", artists: [{ name: "Error" }] }));
                 }
-                
 
-                if (storage_manager.is_lyrics_available(title, artist)) {
-                    this.lrcPanel.setLyrics(storage_manager.get_lyrics(title, artist),
-                                                      storage_manager.get_image(title, artist));
-                } else {
-                    if (songs.length > 0)
-                        search_menu.menu.firstMenuItem.activate();
-                }
                 this.setLoading(false);
-                button.add_item(this.lrcPanel);
-            }));
 
+            }));
     },
 
     setLoading: function (state) {
@@ -221,11 +339,11 @@ const Popup = new Lang.Class({
             }
             return;
         }
-        let spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
+        const spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
         this.spinner = new Animation.AnimatedIcon(spinnerIcon, 16);
         this.spinner.play();
         this.loadtxt = new St.Label({ text: "Searching..." });
-        this.box.add(this.loadtxt, { x_fill: false, x_align: St.Align.MIDDLE });
+        this.box.add(this.loadtxt, ALIGN_MIDDLE_X);
         this.box.add_child(this.spinner.actor);
     },
 
@@ -242,10 +360,10 @@ const Button = new Lang.Class({
     _init: function () {
         this.parent(0.0, "LyricsFinder");
 
-        let box = new St.BoxLayout({
+        const box = new St.BoxLayout({
             style_class: 'panel-status-menu-box'
         });
-        let icon = new St.Icon({
+        const icon = new St.Icon({
             gicon: Gio.icon_new_for_string(Me.path + "/music-symbolic.svg"),
             style_class: 'system-status-icon',
         });
@@ -255,12 +373,29 @@ const Button = new Lang.Class({
 
         popup = new Popup();
         this.menu.addMenuItem(popup);
+        search_menu = new PopupMenu.PopupSubMenuMenuItem('Found: 0');
+        this.add_item(search_menu);
+
+        lrcPanel = new LyricsPanel();
+        lrcPanel.reset();
+        this.add_item(lrcPanel);
 
     },
     add_item: function (item) {
         this.menu.addMenuItem(item);
     }
 });
+
+function launch_extension_prefs() {
+    const appSys = Shell.AppSystem.get_default();
+    const app = appSys.lookup_app('gnome-shell-extension-prefs.desktop');
+    const info = app.get_app_info();
+    const timestamp = global.display.get_current_time_roundtrip();
+    info.launch_uris(
+        ['extension:///' + Me.metadata.uuid],
+        global.create_app_launch_context(timestamp, -1)
+    );
+}
 
 
 function init() {
@@ -269,15 +404,32 @@ function init() {
 let button;
 let popup;
 let search_menu;
-let lyrics_panel;
+let lrcPanel;
+let pos;
+let settingsSignals = [];
+
+function reset() {
+    disable();
+    enable();
+}
 
 function enable() {
     button = new Button();
-    Main.panel.addToStatusArea('lyrics-finder', button);
+
+    pos = settings.get_string(Keys.PANEL_POS);
+    settingsSignals.push(settings.connect('changed::' + Keys.PANEL_POS, reset));
+
+    Main.panel.addToStatusArea('lyrics-finder', button, 1, pos);
 }
+
 
 function disable() {
     popup.disconnect();
     popup.destroy();
     button.destroy();
+    settings.disconnect(settingsSignals);
+    settingsSignals = [];
+    Main.panel.statusArea['lyrics-finder'] = null;
+    button = null;
+    popup = null;
 }

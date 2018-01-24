@@ -4,6 +4,9 @@ const Soup = imports.gi.Soup;
 const Gio = imports.gi.Gio;
 const GLib = imports.gi.GLib;
 const Shell = imports.gi.Shell;
+const Convenience = Me.imports.convenience;
+const Keys = Me.imports.keys;
+const settings = Convenience.getSettings();
 
 const DATA_DIRECTORY = GLib.get_home_dir() + "/.gnome-lyrics-extension/";
 
@@ -11,7 +14,7 @@ var StorageManager = new Lang.Class({
     Name: 'StorageManager',
 
     _init: function () {
-        
+
     },
 
     _download_album_art: function (url, file) {
@@ -23,7 +26,7 @@ var StorageManager = new Lang.Class({
             fstream.write(chunk.get_data(), null);
         }));
 
-        const httpSession = new Soup.SessionAsync();   
+        const httpSession = new Soup.SessionAsync();
         httpSession.queue_message(request, Lang.bind(this, function (httpSession, message) {
             // request completed
             fstream.close(null);
@@ -39,7 +42,7 @@ var StorageManager = new Lang.Class({
     _save_lyrics: function (title, artist, lyrics) {
         const lyrics_name = this._make_lyrics_filename(title, artist);
         const file = Gio.file_new_for_path(lyrics_name);
-        if (file){
+        if (file) {
             this._create_dir(DATA_DIRECTORY);
             const raw = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
             const out = Gio.BufferedOutputStream.new_sized(raw, 4096);
@@ -47,42 +50,40 @@ var StorageManager = new Lang.Class({
             out.close(null);
         }
     },
-    _save_image: function(title, artist, pic_url){
+    _save_image: function (title, artist, pic_url) {
         const pic_name = this._make_image_filename(title, artist);
         const file = Gio.file_new_for_path(pic_name);
-        if (file){
+        if (file) {
             this._create_dir(DATA_DIRECTORY);
-            this._download_album_art(pic_url, file);
+            if (settings.get_boolean(Keys.ENABLE_COVER)) {
+                this._download_album_art(pic_url, file);
+            }
         }
     },
 
-    is_lyrics_available: function(title, artist){
+    is_lyrics_available: function (title, artist) {
         const filename = this._make_lyrics_filename(title, artist);
         return Gio.file_new_for_path(filename).query_exists(null);
     },
 
-    save: function(title, artist, lyrics, pic_url){
-        this._save_lyrics(title, artist , lyrics);
+    save: function (title, artist, lyrics, pic_url) {
+        this._save_lyrics(title, artist, lyrics);
         this._save_image(title, artist, pic_url);
     },
 
-    get_image_gicon: function(title, artist){
-        let filename = '';
-        if (this.is_lyrics_available(title , artist)){
-            filename = this._make_image_filename(title, artist);
-        }
-        return Gio.icon_new_for_string(filename);
+    get_image_gicon: function (title, artist) {
+        return Gio.icon_new_for_string(this.get_image(title, artist));
     },
-    get_image: function(title, artist){
+    get_image: function (title, artist) {
         let filename = '';
-        if (this.is_lyrics_available(title , artist)){
-            filename = this._make_image_filename(title, artist);
+        if (this.is_lyrics_available(title, artist)) {
+            filename = this._make_image_url(title, artist);
         }
         return filename;
     },
-    get_lyrics: function(title, artist){
+    get_lyrics: function (title, artist) {
         const filename = this._make_lyrics_filename(title, artist);
-        let content ='';
+        let content = '';
         try {
             content = Shell.get_file_contents_utf8_sync(filename);
         } catch (e) {
@@ -93,7 +94,7 @@ var StorageManager = new Lang.Class({
     },
 
     _create_dir: function (dir_path) {
-        let dir = Gio.file_new_for_path(dir_path);
+        const dir = Gio.file_new_for_path(dir_path);
         if (!dir.query_exists(null)) {
             try {
                 dir.make_directory(null);
@@ -102,10 +103,15 @@ var StorageManager = new Lang.Class({
             }
         }
     },
-    _make_image_filename: function(title , artist){
+    _make_image_filename: function (title, artist) {
         return DATA_DIRECTORY + `${title}_${artist}`.replace(/[\s\/]/g, '_');
     },
-    _make_lyrics_filename: function(title , artist){
-        return this._make_image_filename(title , artist) + '.lyrics';
+
+    _make_image_url: function (title, artist) {
+        return 'file://' + this._make_image_filename(title, artist);
+    },
+
+    _make_lyrics_filename: function (title, artist) {
+        return this._make_image_filename(title, artist) + '.lyrics';
     },
 });

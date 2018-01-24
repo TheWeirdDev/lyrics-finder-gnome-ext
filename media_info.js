@@ -40,7 +40,7 @@ var MediaInfo = new Lang.Class({
             metadata = {};
         }
 
-        let title = metadata["xesam:title"] ? metadata["xesam:title"].unpack() : "";
+        const title = metadata["xesam:title"] ? metadata["xesam:title"].unpack() : "";
 
         let trackArtist = metadata["xesam:artist"] ? metadata["xesam:artist"].deep_unpack().join('/') : "";
         trackArtist = metadata["rhythmbox:streamTitle"] ? metadata["rhythmbox:streamTitle"].unpack() : trackArtist;
@@ -49,7 +49,7 @@ var MediaInfo = new Lang.Class({
             return;
         }
 
-        let txt = `${title} : ${trackArtist}`;
+        const txt = `${title} : ${trackArtist}`;
         this._callback(title,trackArtist);
         global.log(txt);
     },

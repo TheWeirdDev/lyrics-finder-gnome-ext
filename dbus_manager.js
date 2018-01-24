@@ -13,19 +13,19 @@ var PlayerManager = new Lang.Class({
         this._callback = callback;
 
         // player DBus name pattern
-        let name_regex = /^org\.mpris\.MediaPlayer2\./;
+        const name_regex = /^org\.mpris\.MediaPlayer2\./;
 
         this._dbus.ListNamesRemote(Lang.bind(this, function (names) {
-            let playerNames = [];
+            const playerNames = [];
             for (let n in names[0]) {
-                let name = names[0][n];
+                const name = names[0][n];
                 if (name_regex.test(name)) {
                     playerNames.push(name);
                 }
             }
             playerNames.sort();
             for (let i in playerNames) {
-                let player = playerNames[i];
+                const player = playerNames[i];
                 this._dbus.GetNameOwnerRemote(player, Lang.bind(this, (owner) => {
                     this.add_player(player, owner);
                 }));
@@ -72,10 +72,10 @@ var PlayerManager = new Lang.Class({
             for (let owner in this.players) {
                 this.remove_player(this.players[owner], owner);
             }
+            this._dbus.disconnectSignal(this._ownerChangedId);
         }catch(e){
             global.log(e,"Error disconnecting player");
         }
-        this._dbus.disconnectSignal(this._ownerChangedId);
     }
 
 });

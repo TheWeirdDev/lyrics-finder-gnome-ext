@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="gnome-shell-extensions">
+  <schema id="org.gnome.shell.extensions.lyrics-finder"
+      path="/org/gnome/shell/extensions/lyrics-finder/">
+    <key type="b" name="remove-extras">
+     	<default>false</default>
+    	<summary>Remove parenthesis, brakets, ...</summary>
+      	<description>Remove anything between parenthesis, brakets, ... in title and artist of music</description>
+    </key>
+	  
+	<key type="s" name="panel-pos">
+     	<default>'right'</default>
+    	<summary>Position on panel.</summary>
+      	<description>Sets the position of the extension on the panel. Possible values are: Left, Center, Right.</description>
+    </key>
+	  
+	<key type="s" name="text-align">
+     	<default>'center'</default>
+    	<summary>Lyrics Text Align</summary>
+      	<description>Sets the lyrics text alignment. Possible values are: Left, Center, Right.</description>
+    </key>
+	  
+	<key type="i" name="text-size">
+     	<default>14</default>
+    	<summary>Lyrics text size</summary>
+      	<description>Sets the lyrics text size.</description>
+    </key>
+	  
+	<key type="i" name="image-size">
+     	<default>130</default>
+    	<summary>Album image size</summary>
+      	<description>Sets the album image size. from 50 to 200</description>
+    </key>
+
+	<key type="b" name="enable-album-cover">
+     	<default>true</default>
+    	<summary>Enable album cover image</summary>
+      	<description>Enable album cover image</description>
+    </key>
+	  
+	<key type="i" name="search-limit">
+     	<default>10</default>
+    	<summary>Search limit</summary>
+      	<description>Sets the search results limit. from 5 to 20</description>
+    </key>
+
+	<key type="s" name="font-name">
+     	<default>'Cantarell'</default>
+    	<summary>Lyrics font name</summary>
+      	<description>Lyrics font name</description>
+    </key>	
+	  
+  </schema>
+</schemalist>
+
