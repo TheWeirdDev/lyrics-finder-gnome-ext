@@ -3,11 +3,11 @@
   "description": "Finding lyrics has never been this easy.\nJust play a music!", 
   "name": "Lyrics Finder", 
   "shell-version": [
-    "3.16", 
     "3.18", 
     "3.20", 
     "3.22", 
-    "3.24"
+    "3.24",
+    "3.26"
   ], 
   "url": "http://github.com/alireza6677/lyrics-finder-gnome-ext", 
   "uuid": "LyricsFinder@alireza6677.gmail.com", 

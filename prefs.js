@@ -62,9 +62,7 @@ function buildPrefsWidget() {
 
     // Panel width
     settings.bind(Keys.PANEL_WIDTH, panelWidth, 'value', Gio.SettingsBindFlags.DEFAULT);
-    // panelWidth.connect('focus_out_event', function (widget) {
-    //     settings.set_int(Keys.PANEL_WIDTH, widget.get_value_as_int());
-    // });
+
     // Cover size
     settings.bind(Keys.COVER_SIZE, coverSize, 'value', Gio.SettingsBindFlags.DEFAULT);
 
@@ -84,7 +82,6 @@ function buildPrefsWidget() {
     // Text align
     settings.bind(Keys.TEXT_ALIGN, lyricsAlign, 'active_id', Gio.SettingsBindFlags.DEFAULT);
 
-    // Calcute cache size
     function calculateCacheSize(){
         const file = Gio.file_new_for_path(DATA_DIRECTORY);
         const file_exists = file.query_exists(null);

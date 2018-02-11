@@ -27,7 +27,7 @@
     </key>
 	  
 	<key type="i" name="image-size">
-     	<default>150</default>
+     	<default>170</default>
 		<range min="80" max="250"/>
     	<summary>Album image size</summary>
       	<description>Sets the album image size. from 80 to 250</description>
