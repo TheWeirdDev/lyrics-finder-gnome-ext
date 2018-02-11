@@ -96,7 +96,9 @@ var LyricsItem = new Lang.Class({
                     this.lyrics = this.removeTimes(data.lrc.lyric);
 
                     this.lyrics_panel.setLyrics(this.lyrics, this.picUrl);
-                    this.storage_manager.save(this._title, this._artist, this.lyrics, this.picUrl);
+                    if (settings.get_boolean(Keys.SAVE_LYRICS)){
+                        this.storage_manager.save(this._title, this._artist, this.lyrics, this.picUrl);
+                    }
                 } else {
                     this.lyrics_panel.setLyrics("Network Error", '');
                 }

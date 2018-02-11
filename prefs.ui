@@ -47,7 +47,7 @@ Author: Alireza |S.N|
     <property name="page_increment">5</property>
   </object>
   <object class="GtkNotebook" id="prefs_widget">
-    <property name="width_request">350</property>
+    <property name="width_request">400</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="resize_mode">immediate</property>
@@ -153,15 +153,18 @@ Author: Alireza |S.N|
                           <object class="GtkLabel" id="ex_label">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">ex: "Music name (extra stuff)" ⟶ "Music name"</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">ex: "Music name (extra stuff)" ⟶ "Music name"
+Works for parenthesis, brackets , etc...</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Cantarell 10"/>
+                            </attributes>
                           </object>
                           <packing>
                             <property name="left_attach">0</property>
                             <property name="top_attach">1</property>
+                            <property name="width">2</property>
                           </packing>
-                        </child>
-                        <child>
-                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -202,6 +205,120 @@ Author: Alireza |S.N|
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow" id="extras_listboxrow1">
+                    <property name="width_request">100</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <child>
+                      <object class="GtkGrid" id="background_grid2">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_top">12</property>
+                        <property name="margin_bottom">12</property>
+                        <child>
+                          <object class="GtkLabel" id="search_labe">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Auto search</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSwitch" id="auto_search">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">end</property>
+                            <property name="hexpand">True</property>
+                            <property name="active">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="ex_label1">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Search lyrics automatically while playing a song</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Cantarell 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                            <property name="width">2</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkListBoxRow" id="extras_listboxrow2">
+                    <property name="width_request">100</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <child>
+                      <object class="GtkGrid" id="background_grid3">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_top">12</property>
+                        <property name="margin_bottom">12</property>
+                        <child>
+                          <object class="GtkLabel" id="remove_label2">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Save lyrics</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSwitch" id="save_lyrics">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="halign">end</property>
+                            <property name="hexpand">True</property>
+                            <property name="active">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="ex_label2">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="label" translatable="yes">Save lyrics for offline use</property>
+                            <attributes>
+                              <attribute name="font-desc" value="Cantarell 10"/>
+                            </attributes>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                            <property name="width">2</property>
                           </packing>
                         </child>
                       </object>
@@ -579,7 +696,9 @@ Author: Alireza |S.N|
           <object class="GtkLabel" id="extension_description">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="label" translatable="yes">Changes your wallpaper daily to the Bing picture of the day for your region. Creates a notification for the picture description and copyright information.</property>
+            <property name="label" translatable="yes">&lt;b&gt;Finding lyrics has never been this easy,
+Just play a music !&lt;/b&gt;</property>
+            <property name="use_markup">True</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
           </object>
@@ -598,7 +717,7 @@ Author: Alireza |S.N|
             <child>
               <object class="GtkLabel" id="maintainer_label">
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Maintained by Michael Carroll</property>
+                <property name="label" translatable="yes">Maintained by Alireza S.N</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -609,7 +728,7 @@ Author: Alireza |S.N|
             <child>
               <object class="GtkLabel" id="email_label">
                 <property name="can_focus">False</property>
-                <property name="label">ineffable@gmail.com</property>
+                <property name="label">alireza6677@gmail.com</property>
                 <property name="use_markup">True</property>
               </object>
               <packing>
@@ -627,14 +746,14 @@ Author: Alireza |S.N|
         </child>
         <child>
           <object class="GtkLinkButton" id="homepage_link">
-            <property name="label" translatable="yes">https://github.com/neffo/bing-wallpaper-gnome-extension</property>
+            <property name="label" translatable="yes">http://github.com/alireza6677/lyrics-finder-gnome-ext</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="receives_default">True</property>
             <property name="events"/>
             <property name="halign">center</property>
             <property name="relief">none</property>
-            <property name="uri">https://github.com/neffo/bing-wallpaper-gnome-extension</property>
+            <property name="uri">http://github.com/alireza6677/lyrics-finder-gnome-ext</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -651,7 +770,7 @@ Author: Alireza |S.N|
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Based on NASA APOD Gnome shell extension by Elia Argentieri</property>
+                <property name="label" translatable="yes">Thanks to "Bing Wallpaper Changer" Gnome shell extension by Michael Carroll</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <attributes>

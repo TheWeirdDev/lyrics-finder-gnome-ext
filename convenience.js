@@ -20,7 +20,7 @@ function getSettings(schema) {
     else
         schemaSource = GioSSS.get_default();
 
-        const schemaObj = schemaSource.lookup(schema, true);
+    const schemaObj = schemaSource.lookup(schema, true);
     if (!schemaObj)
         throw new Error('Schema ' + schema + ' could not be found for extension ' +
             extension.metadata.uuid + '. Please check your installation.');

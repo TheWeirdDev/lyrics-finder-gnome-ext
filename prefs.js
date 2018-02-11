@@ -33,12 +33,21 @@ function buildPrefsWidget() {
     const lyricsAlign = builder.get_object('lyrics_align');
     const clearCache = builder.get_object('clear_cahe');
     const cacheSize = builder.get_object('cache_size');
+    const autoSearchSwitch = builder.get_object('auto_search');
+    const saveLyricsSwitch = builder.get_object('save_lyrics');
 
     // Remove extras
     settings.bind(Keys.REMOVE_EXTRAS, removeExtrasSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
 
     // Album cover
     settings.bind(Keys.ENABLE_COVER, albumCoverSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+
+    // Auto search
+    settings.bind(Keys.AUTO_SEARCH, autoSearchSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+
+    // save lyrics
+    settings.bind(Keys.SAVE_LYRICS, saveLyricsSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
+
 
     // Panel Position
     panelPosition.set_active_id(settings.get_string(Keys.PANEL_POS));
@@ -70,7 +79,7 @@ function buildPrefsWidget() {
     settings.bind(Keys.TEXT_ALIGN, lyricsAlign, 'active_id', Gio.SettingsBindFlags.DEFAULT);
 
     // Calcute cache size
-    function calcuteCacheSize(){
+    function calculateCacheSize(){
         const file = Gio.file_new_for_path(DATA_DIRECTORY);
         const file_exists = file.query_exists(null);
         const file_type = file_exists ? file.query_file_type(Gio.FileQueryInfoFlags.NONE, null) : 0;
@@ -88,7 +97,7 @@ function buildPrefsWidget() {
             cacheSize.set_text(GLib.format_size(0));
         }
     }
-    calcuteCacheSize();
+    calculateCacheSize();
 
     // Clear the cache
     clearCache.connect('clicked' , () => {
@@ -105,7 +114,7 @@ function buildPrefsWidget() {
                 child.delete(null);
             }
         }
-        calcuteCacheSize();
+        calculateCacheSize();
     });
 
     box.show_all();

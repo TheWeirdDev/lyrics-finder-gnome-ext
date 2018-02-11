@@ -49,7 +49,18 @@
     	<summary>Lyrics font name</summary>
       	<description>Lyrics font name</description>
     </key>	
-	  
+	
+	<key type="b" name="auto-search">
+     	<default>true</default>
+    	<summary>Auto seacrh</summary>
+      	<description>Search lyrics automatically while playing a song</description>
+    </key>	
+
+	<key type="b" name="save-lyrics">
+     	<default>true</default>
+    	<summary>Save lyrics</summary>
+      	<description>Save lyrics for offline use</description>
+    </key>	
   </schema>
 </schemalist>
 

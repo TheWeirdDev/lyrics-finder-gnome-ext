@@ -9,6 +9,9 @@ const PopupMenu = imports.ui.popupMenu;
 const Pango = imports.gi.Pango;
 const Shell = imports.gi.Shell;
 
+const Clipboard = St.Clipboard.get_default();
+const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
+
 const Manager = Me.imports.dbus_manager;
 const Lyrics = Me.imports.lyrics_api;
 const Storage = Me.imports.storage;
@@ -31,6 +34,7 @@ const LyricsPanel = new Lang.Class({
             can_focus: true,
         });
         this.lyrics = '... No lyrics ...\nJust play a music!';
+        this.hasLyrics = false;
 
         this.label = new St.Label({
             text: this.lyrics,
@@ -47,6 +51,17 @@ const LyricsPanel = new Lang.Class({
             style: 'spacing: 5px;'
         });
 
+        this.copyBtn = new St.Button({
+            label: 'Copy lyrics',
+            reactive: true,
+            can_focus: true,
+            style_class: 'system-menu-action'
+        });
+        this.copyBtn.connect('clicked', () => {
+            if (this.hasLyrics)
+                Clipboard.set_text(CLIPBOARD_TYPE, this.lyrics);
+        });
+        this.copyBtn.hide();
 
         this.scrollView = new St.ScrollView();
         this.scrollView._delegate = this;
@@ -56,6 +71,7 @@ const LyricsPanel = new Lang.Class({
         this.icon = new St.Icon({
             icon_size: this.getCoverSize(),
         });
+
         this.box.add(this.icon, ALIGN_MIDDLE_X);
 
         if (!this.isCoverEnabled()) {
@@ -64,12 +80,16 @@ const LyricsPanel = new Lang.Class({
 
         settings.connect('changed::' + Keys.ENABLE_COVER, () => {
             if (this.isCoverEnabled()) {
+                const gicon = Gio.icon_new_for_string(this.pic);
+                if (gicon != null)
+                    this.icon.gicon = gicon;
                 this.icon.show();
             } else {
                 this.icon.hide();
             }
         });
 
+        this.box.add(this.copyBtn,ALIGN_MIDDLE_X);
         this.box.add(this.label, ALIGN_MIDDLE_X);
         this.actor.set_vertical(true);
         this.actor.add(this.scrollView);
@@ -105,8 +125,8 @@ const LyricsPanel = new Lang.Class({
         let fontWeight = 'normal';
         let fontStyle = 'normal';
 
-        for (let i = 0; i < fontName.length; i++) {
-            switch (fontName[i]) {
+        fontName.forEach(item => {
+            switch (item) {
                 case 'Regular':
                     fontWeight = 'normal';
                     break;
@@ -121,9 +141,9 @@ const LyricsPanel = new Lang.Class({
                     break;
 
                 default:
-                    name.push(fontName[i]);
+                    name.push(item);
             }
-        }
+        });
         name = name.join(' ');
 
         return `padding: 10px;
@@ -137,15 +157,23 @@ const LyricsPanel = new Lang.Class({
     setLyrics: function (lrc, pic) {
         this.lyrics = lrc.trim();
         this.label.text = this.lyrics;
-        this.scrollView.show();
-        if (pic && this.isCoverEnabled()) {
-            const gicon = Gio.icon_new_for_string(pic);
-            if (gicon != null)
-                this.icon.gicon = gicon;
-            else
-                this.icon.icon_name = Me.path + '/album-art-empty.png';
-            this.icon.show();
+        this.hasLyrics = true;
+        if (pic) {
+            if (this.isCoverEnabled()) {
+                const gicon = Gio.icon_new_for_string(pic);
+                if (gicon != null)
+                    this.icon.gicon = gicon;
+                else
+                    this.icon.icon_name = Me.path + '/album-art-empty.png';
+
+                this.icon.show();
+            }
+            this.pic = pic;
         }
+        this.copyBtn.show();
+
+        // Scroll to top
+        this.scrollView.vscroll.adjustment.set_value(0);
     },
 
     isCoverEnabled: function () {
@@ -154,6 +182,8 @@ const LyricsPanel = new Lang.Class({
 
     reset: function () {
         this.setLyrics('... No lyrics ...\nJust play a music!', Me.path + '/album-art-empty.png');
+        this.hasLyrics = false;
+        this.copyBtn.hide();
     }
 });
 
@@ -231,7 +261,7 @@ const Popup = new Lang.Class({
             vertical: false,
             style: 'spacing: 3px;',
         });
-        this.SearchBox.add(new St.Icon({ icon_name: 'gtk-find', icon_size: 20 }), ALIGN_MIDDLE_Y);
+        this.SearchBox.add(new St.Icon({ icon_name: 'system-search-symbolic', icon_size: 20 }), ALIGN_MIDDLE_Y);
         this.SearchBox.add(new St.Label({ text: 'Search' }), ALIGN_MIDDLE_Y);
 
         this.search_btn = new St.Button({
@@ -271,9 +301,9 @@ const Popup = new Lang.Class({
                 return;
             }
             if (settings.get_boolean(Keys.REMOVE_EXTRAS)) {
-                title = title.replace(/\(.*\)/,'').replace(/\[.*\]/,'').replace(/::.*::/,'').trim();
+                title = title.replace(/\(.*\)/, '').replace(/\[.*\]/, '').replace(/::.*::/, '').trim();
                 if (artist)
-                    artist = artist.replace(/\(.*\)/,'').replace(/\[.*\]/,'').replace(/::.*::/,'').trim();
+                    artist = artist.replace(/\(.*\)/, '').replace(/\[.*\]/, '').replace(/::.*::/, '').trim();
             }
 
             this.titleEntry.text = title;
@@ -283,8 +313,13 @@ const Popup = new Lang.Class({
 
             if (storage_manager.is_lyrics_available(title, artist)) {
                 this.loadSong(title, artist);
+                search_menu.label.set_text('Found');
             } else {
-                this.searchSong(title, artist);
+                if (settings.get_boolean(Keys.AUTO_SEARCH)) {
+                    this.searchSong(title, artist);
+                } else {
+                    lrcPanel.reset();
+                }
             }
 
         }));
