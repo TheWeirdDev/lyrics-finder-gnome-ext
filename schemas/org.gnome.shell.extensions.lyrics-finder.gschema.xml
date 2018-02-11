@@ -27,9 +27,10 @@
     </key>
 	  
 	<key type="i" name="image-size">
-     	<default>130</default>
+     	<default>150</default>
+		<range min="80" max="250"/>
     	<summary>Album image size</summary>
-      	<description>Sets the album image size. from 50 to 200</description>
+      	<description>Sets the album image size. from 80 to 250</description>
     </key>
 
 	<key type="b" name="enable-album-cover">
@@ -40,6 +41,7 @@
 	  
 	<key type="i" name="search-limit">
      	<default>10</default>
+		 <range min="5" max="20"/>
     	<summary>Search limit</summary>
       	<description>Sets the search results limit. from 5 to 20</description>
     </key>
@@ -60,7 +62,15 @@
      	<default>true</default>
     	<summary>Save lyrics</summary>
       	<description>Save lyrics for offline use</description>
+    </key>
+
+	<key type="i" name="panel-width">
+     	<default>400</default>
+		<range min="250" max="600"/>
+    	<summary>Panel width</summary>
+      	<description>Sets panel width from 250 to 600, default is 400.</description>
     </key>	
+
   </schema>
 </schemalist>
 

@@ -35,6 +35,7 @@ function buildPrefsWidget() {
     const cacheSize = builder.get_object('cache_size');
     const autoSearchSwitch = builder.get_object('auto_search');
     const saveLyricsSwitch = builder.get_object('save_lyrics');
+    const panelWidth = builder.get_object('panel_width');
 
     // Remove extras
     settings.bind(Keys.REMOVE_EXTRAS, removeExtrasSwitch, 'active', Gio.SettingsBindFlags.DEFAULT);
@@ -59,6 +60,11 @@ function buildPrefsWidget() {
     // Search limit
     settings.bind(Keys.SEARCH_LIMIT, searchLimit, 'value', Gio.SettingsBindFlags.DEFAULT);
 
+    // Panel width
+    settings.bind(Keys.PANEL_WIDTH, panelWidth, 'value', Gio.SettingsBindFlags.DEFAULT);
+    // panelWidth.connect('focus_out_event', function (widget) {
+    //     settings.set_int(Keys.PANEL_WIDTH, widget.get_value_as_int());
+    // });
     // Cover size
     settings.bind(Keys.COVER_SIZE, coverSize, 'value', Gio.SettingsBindFlags.DEFAULT);
 

@@ -47,8 +47,11 @@ const LyricsPanel = new Lang.Class({
 
         this.box = new St.BoxLayout({
             vertical: true,
-            width: 350,
+            width: settings.get_int(Keys.PANEL_WIDTH),
             style: 'spacing: 5px;'
+        });
+        settings.connect('changed::' + Keys.PANEL_WIDTH, () => {
+            this.box.width = settings.get_int(Keys.PANEL_WIDTH);
         });
 
         this.copyBtn = new St.Button({
@@ -89,7 +92,7 @@ const LyricsPanel = new Lang.Class({
             }
         });
 
-        this.box.add(this.copyBtn,ALIGN_MIDDLE_X);
+        this.box.add(this.copyBtn, ALIGN_MIDDLE_X);
         this.box.add(this.label, ALIGN_MIDDLE_X);
         this.actor.set_vertical(true);
         this.actor.add(this.scrollView);
@@ -210,9 +213,13 @@ const Popup = new Lang.Class({
 
         this.box = new St.BoxLayout({
             vertical: true,
-            width: 350,
+            width: settings.get_int(Keys.PANEL_WIDTH),
             style: 'spacing: 5px;'
         });
+        settings.connect('changed::' + Keys.PANEL_WIDTH, () => {
+            this.box.width = settings.get_int(Keys.PANEL_WIDTH);
+        });
+
         this.actor.add(this.box);
 
         this.topBox = new St.BoxLayout({
@@ -453,7 +460,6 @@ function enable() {
 
     pos = settings.get_string(Keys.PANEL_POS);
     settingsSignals.push(settings.connect('changed::' + Keys.PANEL_POS, reset));
-
     Main.panel.addToStatusArea('lyrics-finder', button, 1, pos);
 }
 
