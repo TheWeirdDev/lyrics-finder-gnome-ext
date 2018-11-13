@@ -8,6 +8,7 @@ const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Pango = imports.gi.Pango;
 const Shell = imports.gi.Shell;
+const Clutter = imports.gi.Clutter;
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
@@ -112,6 +113,14 @@ const LyricsPanel = new Lang.Class({
         settings.connect('changed::' + Keys.TEXT_ALIGN, () => {
             this.label.style = this.getLyricsStyle();
         });
+
+        settings.connect('changed::' + Keys.USE_COLOR, () => {
+            this.label.style = this.getLyricsStyle();
+        });
+
+        settings.connect('changed::' + Keys.COLOR, () => {
+            this.label.style = this.getLyricsStyle();
+        });
     },
 
     getCoverSize: function () {
@@ -149,12 +158,15 @@ const LyricsPanel = new Lang.Class({
         });
         name = name.join(' ');
 
+        const useColor = settings.get_boolean(Keys.USE_COLOR);
+        const color = settings.get_string(Keys.COLOR);
+
         return `padding: 10px;
                 font-size: ${settings.get_int(Keys.TEXT_SIZE)}pt;
                 text-align: ${settings.get_string(Keys.TEXT_ALIGN)};
                 font-family: "${name}";
                 font-weight: ${fontWeight};
-                font-style: ${fontStyle};`;
+                font-style: ${fontStyle};` + `${useColor ? `color: ${color}` : ''}`;
     },
 
     setLyrics: function (lrc, pic) {

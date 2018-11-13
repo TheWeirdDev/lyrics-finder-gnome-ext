@@ -23,7 +23,9 @@ var StorageManager = new Lang.Class({
 
         // got_chunk event
         request.connect('got_chunk', Lang.bind(this, function (message, chunk) {
-            fstream.write(chunk.get_data(), null);
+            if (message.status_code == 200) {
+                fstream.write(chunk.get_data(), null);
+            }
         }));
 
         const httpSession = new Soup.SessionAsync();

@@ -71,6 +71,17 @@
       	<description>Sets panel width from 250 to 600, default is 400.</description>
     </key>	
 
+    <key type="b" name="use-color">
+     	<default>false</default>
+    	<summary>Use custom color</summary>
+      	<description>Set custom color for lyrics text</description>
+    </key>
+
+	<key type="s" name="color">
+     	<default>'#000000'</default>
+    	<summary>Lyrics color</summary>
+      	<description>Lyrics text color</description>
+    </key>
   </schema>
 </schemalist>
 

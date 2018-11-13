@@ -12,3 +12,5 @@ var   ENABLE_COVER   =    'enable-album-cover';
 var   SAVE_LYRICS    =    'save-lyrics';
 var   AUTO_SEARCH    =    'auto-search';
 var   PANEL_WIDTH    =    'panel-width';
+var   USE_COLOR      =    'use-color';
+var   COLOR          =    'color';
