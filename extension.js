@@ -406,9 +406,6 @@ const Popup = class PopUpBtn extends PopupMenu.PopupBaseMenuItem {
 
 var PanelButton = class Panel_Button extends PanelMenu.Button {
 
-    add(item) {
-    }
-
     constructor() {
         super(0.0, "LyricsFinder");
 
