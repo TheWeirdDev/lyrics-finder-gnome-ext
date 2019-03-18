@@ -2,10 +2,9 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const DBusIface = Me.imports.dbus;
 const Lang = imports.lang;
 
-var MediaInfo = new Lang.Class({
-    Name: 'MediaInfo',
+var MediaInfo = class Media_Info{
 
-    _init: function (busName, owner, callback) {
+    constructor(busName, owner, callback) {
         this.owner = owner;
 
         new DBusIface.Properties(busName,
@@ -21,21 +20,22 @@ var MediaInfo = new Lang.Class({
             }));
 
         this._callback = callback;
-    },
-    _ready: function () {
+    }
+
+    _ready() {
         this._propChangedId = this._prop.connectSignal('PropertiesChanged', Lang.bind(this, function (proxy, sender, [iface, props]) {
             if (!props.Metadata)
                 return;
 
             this.parse_data(props.Metadata.deep_unpack());
         }));
-    },
+    }
 
-    _server_ready: function(){
+    _server_ready(){
         this.parse_data(this._mediaServerPlayer.Metadata);
-    },
+    }
 
-    parse_data: function (metadata) {
+    parse_data(metadata) {
         if (!metadata || Object.keys(metadata).length < 2) {
             metadata = {};
         }
@@ -52,10 +52,10 @@ var MediaInfo = new Lang.Class({
         const txt = `${title} : ${trackArtist}`;
         this._callback(title,trackArtist);
         global.log(txt);
-    },
+    }
 
-    disconnect: function () {
+    disconnect() {
         this._prop.disconnectSignal(this._propChangedId);
         this._callback();
     }
-});
+}

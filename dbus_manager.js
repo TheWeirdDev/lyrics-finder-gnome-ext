@@ -3,10 +3,9 @@ const DBusIface = Me.imports.dbus;
 const Lang = imports.lang;
 const MediaInfo = Me.imports.media_info;
 
-var PlayerManager = new Lang.Class({
-    Name: 'PlayerManager',
+var PlayerManager = class Player_Manager {
 
-    _init: function (callback) {
+    constructor(callback) {
         this._dbus = new DBusIface.DBus();
 
         this.players = {};
@@ -51,23 +50,23 @@ var PlayerManager = new Lang.Class({
                 // }
             }
         ));
-    },
+    }
 
-    add_player: function (name, owner) {
+    add_player(name, owner) {
         this.players[owner] = new MediaInfo.MediaInfo(name, owner, this._callback);
-    },
+    }
 
-    remove_player: function (name, owner) {
+    remove_player(name, owner) {
         this.players[owner].disconnect();
         delete this.players[owner];
-    },
+    }
 
-    change_player_owner: function (name, old_owner, new_owner) {
+    change_player_owner(name, old_owner, new_owner) {
         this.remove_player(name, old_owner);
         this.add_player(name, new_owner);
-    },
+    }
 
-    disconnect_all: function () {
+    disconnect_all() {
         try {
             for (let owner in this.players) {
                 this.remove_player(this.players[owner], owner);
@@ -78,4 +77,4 @@ var PlayerManager = new Lang.Class({
         }
     }
 
-});
+}

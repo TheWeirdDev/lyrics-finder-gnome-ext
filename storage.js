@@ -10,14 +10,13 @@ const settings = Convenience.getSettings();
 
 const DATA_DIRECTORY = GLib.get_home_dir() + "/.gnome-lyrics-extension/";
 
-var StorageManager = new Lang.Class({
-    Name: 'StorageManager',
+var StorageManager = class Storage_Manager {
 
-    _init: function () {
+    constructor() {
 
-    },
+    }
 
-    _download_album_art: function (url, file) {
+    _download_album_art(url, file) {
         const fstream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
         const request = Soup.Message.new('GET', url);
 
@@ -39,9 +38,9 @@ var StorageManager = new Lang.Class({
                 file.delete(null);
             }
         }));
-    },
+    }
 
-    _save_lyrics: function (title, artist, lyrics) {
+    _save_lyrics(title, artist, lyrics) {
         const lyrics_name = this._make_lyrics_filename(title, artist);
         const file = Gio.file_new_for_path(lyrics_name);
         if (file) {
@@ -51,8 +50,9 @@ var StorageManager = new Lang.Class({
             Shell.write_string_to_stream(out, lyrics);
             out.close(null);
         }
-    },
-    _save_image: function (title, artist, pic_url) {
+    }
+
+    _save_image(title, artist, pic_url) {
         const pic_name = this._make_image_filename(title, artist);
         const file = Gio.file_new_for_path(pic_name);
         if (file) {
@@ -61,29 +61,31 @@ var StorageManager = new Lang.Class({
                 this._download_album_art(pic_url, file);
             }
         }
-    },
+    }
 
-    is_lyrics_available: function (title, artist) {
+    is_lyrics_available(title, artist) {
         const filename = this._make_lyrics_filename(title, artist);
         return Gio.file_new_for_path(filename).query_exists(null);
-    },
+    }
 
-    save: function (title, artist, lyrics, pic_url) {
+    save(title, artist, lyrics, pic_url) {
         this._save_lyrics(title, artist, lyrics);
         this._save_image(title, artist, pic_url);
-    },
+    }
 
-    get_image_gicon: function (title, artist) {
+    get_image_gicon(title, artist) {
         return Gio.icon_new_for_string(this.get_image(title, artist));
-    },
-    get_image: function (title, artist) {
+    }
+
+    get_image(title, artist) {
         let filename = '';
         if (this.is_lyrics_available(title, artist)) {
             filename = this._make_image_url(title, artist);
         }
         return filename;
-    },
-    get_lyrics: function (title, artist) {
+    }
+
+    get_lyrics(title, artist) {
         const filename = this._make_lyrics_filename(title, artist);
         let content = '';
         try {
@@ -93,9 +95,9 @@ var StorageManager = new Lang.Class({
             return content;
         }
         return content;
-    },
+    }
 
-    _create_dir: function (dir_path) {
+    _create_dir(dir_path) {
         const dir = Gio.file_new_for_path(dir_path);
         if (!dir.query_exists(null)) {
             try {
@@ -104,16 +106,17 @@ var StorageManager = new Lang.Class({
                 global.logError('Failed to create directory and/or file! ' + e);
             }
         }
-    },
-    _make_image_filename: function (title, artist) {
+    }
+
+    _make_image_filename(title, artist) {
         return DATA_DIRECTORY + `${title}_${artist}`.replace(/[\s\/]/g, '_');
-    },
+    }
 
-    _make_image_url: function (title, artist) {
+    _make_image_url(title, artist) {
         return 'file://' + this._make_image_filename(title, artist);
-    },
+    }
 
-    _make_lyrics_filename: function (title, artist) {
+    _make_lyrics_filename(title, artist) {
         return this._make_image_filename(title, artist) + '.lyrics';
-    },
-});
+    }
+}

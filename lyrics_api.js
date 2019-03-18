@@ -8,14 +8,15 @@ const Convenience = Me.imports.convenience;
 const Keys = Me.imports.keys;
 const settings = Convenience.getSettings();
 
-var LyricsFinder = new Lang.Class({
-    Name: 'LyricsFinder',
-    _init: function () {
+var LyricsFinder = class LyricsFinder {
+
+    constructor() {
         this.httpSession = new Soup.SessionAsync();
         Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
 
-    },
-    find_lyrics: function (title, artist, callback) {
+    }
+
+    find_lyrics(title, artist, callback) {
         const limit = settings.get_int(Keys.SEARCH_LIMIT);
         this.request = Soup.Message.new('POST', `http://music.163.com/api/search/pc?s=${title} ${artist}&type=1&limit=${limit}`);
         this.httpSession.queue_message(this.request, (httpSession, message) => {
@@ -34,15 +35,13 @@ var LyricsFinder = new Lang.Class({
             }
         });
     }
-});
+}
 
 
-var LyricsItem = new Lang.Class({
-    Name: 'LyricsItem',
-    Extends: PopupMenu.PopupBaseMenuItem,
+var LyricsItem = class Lyrics_Item extends PopupMenu.PopupBaseMenuItem {
 
-    _init: function (song, lyrics_panel, search_menu, storage_manager, title, artist) {
-        this.parent({
+    constructor(song, lyrics_panel, search_menu, storage_manager, title, artist) {
+        super({
             reactive: true,
             can_focus: true,
         });
@@ -81,9 +80,9 @@ var LyricsItem = new Lang.Class({
         this.httpSession = new Soup.SessionAsync();
         Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());     
 
-    },
+    }
 
-    fetchLyrics: function (id) {
+    fetchLyrics(id) {
         this.request = Soup.Message.new('POST', `http://music.163.com/api/song/lyric?os=pc&id=${id}&lv=1`);
         this.httpSession.queue_message(this.request, (httpSession, message) => {
             if (message.status_code == 200) {
@@ -106,16 +105,16 @@ var LyricsItem = new Lang.Class({
                 this.lyrics_panel.setLyrics("Network Error", '');
             }
         });
-    },
+    }
 
-    removeTimes: function (lrc) {
-        return lrc.replace(/^\[.*\]/gm, ' ');
-    },
+    removeTimes(lrc) {
+        return lrc.replace(/^\[.*\]/gm, '');
+    }
 
-    activate: function (event) {
+    activate(event) {
         if (this.search_menu) {
             this.fetchLyrics(this.id);
             this.search_menu.menu.close();
         }
     }
-});
+}

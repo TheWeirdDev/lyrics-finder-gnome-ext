@@ -24,12 +24,10 @@ const ALIGN_MIDDLE_Y = { y_fill: false, y_align: St.Align.MIDDLE };
 
 const settings = Convenience.getSettings();
 
-const LyricsPanel = new Lang.Class({
-    Name: 'Popup',
-    Extends: PopupMenu.PopupBaseMenuItem,
+const LyricsPanel = class Lyrics_Panel extends PopupMenu.PopupBaseMenuItem {
 
-    _init: function () {
-        this.parent({
+    constructor() {
+        super({
             hover: false,
             activate: false,
             can_focus: true,
@@ -121,16 +119,16 @@ const LyricsPanel = new Lang.Class({
         settings.connect('changed::' + Keys.COLOR, () => {
             this.label.style = this.getLyricsStyle();
         });
-    },
+    }
 
-    getCoverSize: function () {
+    getCoverSize() {
         let size = settings.get_int(Keys.COVER_SIZE);
         size = size < 80 ? 80 : size;
         size = size > 200 ? 200 : size;
         return size;
-    },
+    }
 
-    getLyricsStyle() {
+    getLyricsStyle(){
         const fontName = settings.get_string(Keys.FONT_NAME).split(' ');
 
         let name = [];
@@ -167,9 +165,9 @@ const LyricsPanel = new Lang.Class({
                 font-family: "${name}";
                 font-weight: ${fontWeight};
                 font-style: ${fontStyle};` + `${useColor ? `color: ${color}` : ''}`;
-    },
+    }
 
-    setLyrics: function (lrc, pic) {
+    setLyrics(lrc, pic) {
         this.lyrics = lrc.trim();
         this.label.text = this.lyrics;
         this.hasLyrics = true;
@@ -189,25 +187,23 @@ const LyricsPanel = new Lang.Class({
 
         // Scroll to top
         this.scrollView.vscroll.adjustment.set_value(0);
-    },
+    }
 
-    isCoverEnabled: function () {
+    isCoverEnabled() {
         return settings.get_boolean(Keys.ENABLE_COVER);
-    },
+    }
 
-    reset: function () {
+    reset() {
         this.setLyrics('... No lyrics ...\nJust play a music!', Me.path + '/album-art-empty.png');
         this.hasLyrics = false;
         this.copyBtn.hide();
     }
-});
+}
 
-const Popup = new Lang.Class({
-    Name: 'Popup',
-    Extends: PopupMenu.PopupBaseMenuItem,
+const Popup = class PopUpBtn extends PopupMenu.PopupBaseMenuItem {
 
-    _init: function () {
-        this.parent({
+    constructor() {
+        super({
             hover: false,
             activate: false,
             can_focus: true,
@@ -218,9 +214,9 @@ const Popup = new Lang.Class({
 
         this.createUi();
 
-    },
+    }
 
-    createUi: function () {
+    createUi() {
 
 
         this.box = new St.BoxLayout({
@@ -343,16 +339,17 @@ const Popup = new Lang.Class({
 
         }));
 
-    },
-    loadSong: function (title, artist) {
+    }
+    
+    loadSong(title, artist) {
         lrcPanel.reset();
 
         const storage_manager = new Storage.StorageManager();
         lrcPanel.setLyrics(storage_manager.get_lyrics(title, artist),
             storage_manager.get_image(title, artist));
-    },
+    }
 
-    searchSong: function (title, artist) {
+    searchSong(title, artist) {
 
         lrcPanel.reset();
 
@@ -382,9 +379,9 @@ const Popup = new Lang.Class({
                 this.setLoading(false);
 
             }));
-    },
+    }
 
-    setLoading: function (state) {
+    setLoading(state) {
         this.loading = state;
         if (!state) {
             if (this.spinner && this.loadtxt) {
@@ -399,20 +396,21 @@ const Popup = new Lang.Class({
         this.loadtxt = new St.Label({ text: "Searching..." });
         this.box.add(this.loadtxt, ALIGN_MIDDLE_X);
         this.box.add_child(this.spinner.actor);
-    },
+    }
 
-    disconnect: function () {
+    disconnect() {
         this.manager.disconnect_all();
     }
 
-});
+}
 
-const Button = new Lang.Class({
-    Name: 'Button',
-    Extends: PanelMenu.Button,
+var PanelButton = class Panel_Button extends PanelMenu.Button {
 
-    _init: function () {
-        this.parent(0.0, "LyricsFinder");
+    add(item) {
+    }
+
+    constructor() {
+        super(0.0, "LyricsFinder");
 
         const box = new St.BoxLayout({
             style_class: 'panel-status-menu-box'
@@ -428,17 +426,13 @@ const Button = new Lang.Class({
         popup = new Popup();
         this.menu.addMenuItem(popup);
         search_menu = new PopupMenu.PopupSubMenuMenuItem('Found: 0');
-        this.add_item(search_menu);
+        this.menu.addMenuItem(search_menu);
 
         lrcPanel = new LyricsPanel();
         lrcPanel.reset();
-        this.add_item(lrcPanel);
-
-    },
-    add_item: function (item) {
-        this.menu.addMenuItem(item);
+        this.menu.addMenuItem(lrcPanel);
     }
-});
+}
 
 function launch_extension_prefs() {
     const appSys = Shell.AppSystem.get_default();
@@ -468,7 +462,7 @@ function reset() {
 }
 
 function enable() {
-    button = new Button();
+    button = new PanelButton();
 
     pos = settings.get_string(Keys.PANEL_POS);
     settingsSignals.push(settings.connect('changed::' + Keys.PANEL_POS, reset));
