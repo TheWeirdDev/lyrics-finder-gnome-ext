@@ -11,9 +11,10 @@
     "3.26",
     "3.28",
     "3.30",
-    "3.32"
+    "3.32",
+    "3.34"
   ], 
   "url": "http://github.com/alireza6677/lyrics-finder-gnome-ext", 
   "uuid": "LyricsFinder@alireza6677.gmail.com", 
-  "version": 4
+  "version": 5
 }

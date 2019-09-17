@@ -2,7 +2,7 @@ const Me = imports.misc.extensionUtils.getCurrentExtension();
 const DBusIface = Me.imports.dbus;
 const Lang = imports.lang;
 
-var MediaInfo = class Media_Info{
+var MediaInfo = class Media_Info {
 
     constructor(busName, owner, callback) {
         this.owner = owner;
@@ -42,7 +42,7 @@ var MediaInfo = class Media_Info{
 
         const title = metadata["xesam:title"] ? metadata["xesam:title"].unpack() : "";
 
-        let trackArtist = metadata["xesam:artist"] ? metadata["xesam:artist"].deep_unpack().join('/') : "";
+        let trackArtist = metadata["xesam:artist"] ? metadata["xesam:artist"].deep_unpack().toString() : "";
         trackArtist = metadata["rhythmbox:streamTitle"] ? metadata["rhythmbox:streamTitle"].unpack() : trackArtist;
         if (title.trim().length == 0){
             this._callback();

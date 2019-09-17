@@ -9,6 +9,8 @@ const PopupMenu = imports.ui.popupMenu;
 const Pango = imports.gi.Pango;
 const Shell = imports.gi.Shell;
 const Clutter = imports.gi.Clutter;
+const GObject = imports.gi.GObject;
+const GdkPixbuf = imports.gi.GdkPixbuf;
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
@@ -24,10 +26,10 @@ const ALIGN_MIDDLE_Y = { y_fill: false, y_align: St.Align.MIDDLE };
 
 const settings = Convenience.getSettings();
 
-const LyricsPanel = class Lyrics_Panel extends PopupMenu.PopupBaseMenuItem {
+const LyricsPanel = GObject.registerClass(class Lyrics_Panel extends PopupMenu.PopupBaseMenuItem {
 
-    constructor() {
-        super({
+    _init() {
+        super._init({
             hover: false,
             activate: false,
             can_focus: true,
@@ -93,8 +95,8 @@ const LyricsPanel = class Lyrics_Panel extends PopupMenu.PopupBaseMenuItem {
 
         this.box.add(this.copyBtn, ALIGN_MIDDLE_X);
         this.box.add(this.label, ALIGN_MIDDLE_X);
-        this.actor.set_vertical(true);
-        this.actor.add(this.scrollView);
+        this.set_vertical(true);
+        this.add(this.scrollView);
 
         settings.connect('changed::' + Keys.COVER_SIZE, () => {
             this.icon.icon_size = this.getCoverSize();
@@ -173,11 +175,12 @@ const LyricsPanel = class Lyrics_Panel extends PopupMenu.PopupBaseMenuItem {
         this.hasLyrics = true;
         if (pic) {
             if (this.isCoverEnabled()) {
-                const gicon = Gio.icon_new_for_string(pic);
+                let gicon = Gio.icon_new_for_string(pic);
+
                 if (gicon != null)
-                    this.icon.gicon = gicon;
-                else
-                    this.icon.icon_name = Me.path + '/album-art-empty.png';
+                    this.icon.set_gicon(gicon);
+               else
+                   this.icon.icon_name = Me.path + '/album-art-empty.png';
 
                 this.icon.show();
             }
@@ -198,12 +201,12 @@ const LyricsPanel = class Lyrics_Panel extends PopupMenu.PopupBaseMenuItem {
         this.hasLyrics = false;
         this.copyBtn.hide();
     }
-}
+});
 
-const Popup = class PopUpBtn extends PopupMenu.PopupBaseMenuItem {
+const LyricsPopup = GObject.registerClass(class LyricsPopup extends PopupMenu.PopupBaseMenuItem {
 
-    constructor() {
-        super({
+    _init() {
+        super._init({
             hover: false,
             activate: false,
             can_focus: true,
@@ -218,6 +221,9 @@ const Popup = class PopUpBtn extends PopupMenu.PopupBaseMenuItem {
 
     createUi() {
 
+        this.spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
+        this.spinner = null;
+        this.loadtxt = null;
 
         this.box = new St.BoxLayout({
             vertical: true,
@@ -228,7 +234,7 @@ const Popup = class PopUpBtn extends PopupMenu.PopupBaseMenuItem {
             this.box.width = settings.get_int(Keys.PANEL_WIDTH);
         });
 
-        this.actor.add(this.box);
+        this.add(this.box);
 
         this.topBox = new St.BoxLayout({
             vertical: false,
@@ -384,14 +390,17 @@ const Popup = class PopUpBtn extends PopupMenu.PopupBaseMenuItem {
     setLoading(state) {
         this.loading = state;
         if (!state) {
-            if (this.spinner && this.loadtxt) {
+            if (this.spinner != null) {
                 this.spinner.actor.destroy();
+                this.spinner = null;
+            }
+            if (this.loadtxt != null) {
                 this.loadtxt.destroy();
+                this.loadtxt = null;
             }
             return;
         }
-        const spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
-        this.spinner = new Animation.AnimatedIcon(spinnerIcon, 16);
+        this.spinner = new Animation.AnimatedIcon(this.spinnerIcon, 16);
         this.spinner.play();
         this.loadtxt = new St.Label({ text: "Searching..." });
         this.box.add(this.loadtxt, ALIGN_MIDDLE_X);
@@ -402,12 +411,12 @@ const Popup = class PopUpBtn extends PopupMenu.PopupBaseMenuItem {
         this.manager.disconnect_all();
     }
 
-}
+});
 
-var PanelButton = class Panel_Button extends PanelMenu.Button {
+var LyricsFinderPanelButton = GObject.registerClass(class LyricsFinderPanelButton extends PanelMenu.Button {
 
-    constructor() {
-        super(0.0, "LyricsFinder");
+    _init() {
+        super._init(0.0, "LyricsFinder");
 
         const box = new St.BoxLayout({
             style_class: 'panel-status-menu-box'
@@ -417,10 +426,10 @@ var PanelButton = class Panel_Button extends PanelMenu.Button {
             style_class: 'system-status-icon',
         });
         box.add_actor(icon);
-        this.actor.add_actor(box);
-        this.actor.add_style_class_name('panel-status-button');
+        this.add_actor(box);
+        this.add_style_class_name('panel-status-button');
 
-        popup = new Popup();
+        popup = new LyricsPopup();
         this.menu.addMenuItem(popup);
         search_menu = new PopupMenu.PopupSubMenuMenuItem('Found: 0');
         this.menu.addMenuItem(search_menu);
@@ -429,7 +438,7 @@ var PanelButton = class Panel_Button extends PanelMenu.Button {
         lrcPanel.reset();
         this.menu.addMenuItem(lrcPanel);
     }
-}
+});
 
 function launch_extension_prefs() {
     const appSys = Shell.AppSystem.get_default();
@@ -459,7 +468,7 @@ function reset() {
 }
 
 function enable() {
-    button = new PanelButton();
+    button = new LyricsFinderPanelButton();
 
     pos = settings.get_string(Keys.PANEL_POS);
     settingsSignals.push(settings.connect('changed::' + Keys.PANEL_POS, reset));

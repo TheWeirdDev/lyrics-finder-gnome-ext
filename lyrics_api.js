@@ -7,6 +7,7 @@ const Gio = imports.gi.Gio;
 const Convenience = Me.imports.convenience;
 const Keys = Me.imports.keys;
 const settings = Convenience.getSettings();
+const GObject = imports.gi.GObject;
 
 var LyricsFinder = class LyricsFinder {
 
@@ -38,10 +39,10 @@ var LyricsFinder = class LyricsFinder {
 }
 
 
-var LyricsItem = class Lyrics_Item extends PopupMenu.PopupBaseMenuItem {
+var LyricsItem = GObject.registerClass(class Lyrics_Item extends PopupMenu.PopupBaseMenuItem {
 
-    constructor(song, lyrics_panel, search_menu, storage_manager, title, artist) {
-        super({
+    _init(song, lyrics_panel, search_menu, storage_manager, title, artist) {
+        super._init({
             reactive: true,
             can_focus: true,
         });
@@ -117,4 +118,4 @@ var LyricsItem = class Lyrics_Item extends PopupMenu.PopupBaseMenuItem {
             this.search_menu.menu.close();
         }
     }
-}
+});
