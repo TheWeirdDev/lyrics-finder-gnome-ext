@@ -442,7 +442,7 @@ var LyricsFinderPanelButton = GObject.registerClass(class LyricsFinderPanelButto
 
 function launch_extension_prefs() {
     const appSys = Shell.AppSystem.get_default();
-    const app = appSys.lookup_app('gnome-shell-extension-prefs.desktop');
+    const app = appSys.lookup_app('org.gnome.Extensions.desktop');
     const info = app.get_app_info();
     const timestamp = global.display.get_current_time_roundtrip();
     info.launch_uris(

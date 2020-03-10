@@ -4,9 +4,10 @@
   "name": "Lyrics Finder", 
   "settings-schema": "org.gnome.shell.extensions.lyrics-finder", 
   "shell-version": [
-    "3.34"
+    "3.34",
+    "3.36"
   ], 
-  "url": "http://github.com/alireza6677/lyrics-finder-gnome-ext", 
+  "url": "http://github.com/TheWeirdDev/lyrics-finder-gnome-ext", 
   "uuid": "LyricsFinder@alireza6677.gmail.com", 
-  "version": 6
+  "version": 7
 }
