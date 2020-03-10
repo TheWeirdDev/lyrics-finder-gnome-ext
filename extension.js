@@ -26,7 +26,11 @@ const ALIGN_MIDDLE_Y = { y_fill: false, y_align: St.Align.MIDDLE };
 
 const settings = Convenience.getSettings();
 
-const LyricsPanel = GObject.registerClass(class Lyrics_Panel extends PopupMenu.PopupBaseMenuItem {
+const LyricsPanel = GObject.registerClass(
+    {
+        GtypeName: 'LyricsPanel'
+    },
+    class extends PopupMenu.PopupBaseMenuItem {
 
     _init() {
         super._init({
@@ -203,7 +207,11 @@ const LyricsPanel = GObject.registerClass(class Lyrics_Panel extends PopupMenu.P
     }
 });
 
-const LyricsPopup = GObject.registerClass(class LyricsPopup extends PopupMenu.PopupBaseMenuItem {
+const LyricsPopup = GObject.registerClass(
+    {
+        GTypeName: 'LyricsPopup'
+    },
+    class LyricsPopup extends PopupMenu.PopupBaseMenuItem {
 
     _init() {
         super._init({
