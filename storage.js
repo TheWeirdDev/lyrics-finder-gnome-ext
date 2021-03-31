@@ -31,10 +31,7 @@ var StorageManager = class Storage_Manager {
         httpSession.queue_message(request, Lang.bind(this, function (httpSession, message) {
             // request completed
             fstream.close(null);
-            if (message.status_code == 200) {
-                global.log('Download successful');
-            } else {
-                global.log("Couldn't fetch image from " + url);
+            if (message.status_code != 200) {
                 file.delete(null);
             }
         }));
@@ -91,7 +88,6 @@ var StorageManager = class Storage_Manager {
         try {
             content = Shell.get_file_contents_utf8_sync(filename);
         } catch (e) {
-            global.logError('Failed to load lyrics: ' + e);
             return content;
         }
         return content;
@@ -103,7 +99,6 @@ var StorageManager = class Storage_Manager {
             try {
                 dir.make_directory(null);
             } catch (e) {
-                global.logError('Failed to create directory and/or file! ' + e);
             }
         }
     }

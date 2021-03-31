@@ -51,7 +51,6 @@ var MediaInfo = class Media_Info {
 
         const txt = `${title} : ${trackArtist}`;
         this._callback(title,trackArtist);
-        global.log(txt);
     }
 
     disconnect() {

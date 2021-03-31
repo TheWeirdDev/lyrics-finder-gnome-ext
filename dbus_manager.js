@@ -37,7 +37,6 @@ var PlayerManager = class Player_Manager {
                     // if (!this._disabling) {
                     if (new_owner && !old_owner) {
                         // this._addPlayer(name, new_owner);
-                        global.log('LyricsFinder: ', name, new_owner);
                         this.add_player(name, new_owner);
                     }
                     else if (old_owner && !new_owner) {
@@ -57,8 +56,11 @@ var PlayerManager = class Player_Manager {
     }
 
     remove_player(name, owner) {
-        this.players[owner].disconnect();
-        delete this.players[owner];
+        try {
+            this.players[owner].disconnect();
+            delete this.players[owner];
+        }catch(e){
+        }
     }
 
     change_player_owner(name, old_owner, new_owner) {
@@ -73,7 +75,6 @@ var PlayerManager = class Player_Manager {
             }
             this._dbus.disconnectSignal(this._ownerChangedId);
         }catch(e){
-            global.log(e,"Error disconnecting player");
         }
     }
 
