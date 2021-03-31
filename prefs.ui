@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.1 
+<!-- Generated with glade 3.38.2 
 
 Copyright (C) 2018
 
@@ -22,80 +22,79 @@ Author: Alireza |S.N|
 
 -->
 <interface domain="">
-  <requires lib="gtk+" version="3.18"/>
+  <requires lib="gtk+" version="3.24"/>
   <!-- interface-license-type gplv3 -->
   <!-- interface-name LyricsFinder preferences -->
   <!-- interface-copyright 2018 -->
   <!-- interface-authors Alireza |S.N| -->
   <object class="GtkImage" id="delete_img">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="stock">gtk-delete</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">gtk-delete</property>
   </object>
   <object class="GtkAdjustment" id="img_adj">
     <property name="lower">80</property>
     <property name="upper">250</property>
     <property name="value">130</property>
-    <property name="step_increment">5</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">5</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkAdjustment" id="search_adj">
     <property name="lower">5</property>
     <property name="upper">20</property>
     <property name="value">10</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">5</property>
+    <property name="step-increment">1</property>
+    <property name="page-increment">5</property>
   </object>
   <object class="GtkAdjustment" id="width_adj">
     <property name="lower">250</property>
     <property name="upper">600</property>
     <property name="value">350</property>
-    <property name="step_increment">5</property>
-    <property name="page_increment">10</property>
+    <property name="step-increment">5</property>
+    <property name="page-increment">10</property>
   </object>
   <object class="GtkNotebook" id="prefs_widget">
-    <property name="width_request">400</property>
+    <property name="width-request">400</property>
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="resize_mode">immediate</property>
+    <property name="can-focus">False</property>
     <child>
       <object class="GtkBox" id="settings_box">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">10</property>
         <child>
           <object class="GtkFrame" id="main_frame">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_left">12</property>
-            <property name="margin_right">12</property>
-            <property name="margin_top">12</property>
-            <property name="margin_bottom">12</property>
-            <property name="label_xalign">0</property>
-            <property name="shadow_type">in</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="label-xalign">0</property>
             <child>
               <object class="GtkListBox" id="/run/media/alireza/Music/NewMusics/Honeymoon/n/a/theme/process-working.svg">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="selection_mode">none</property>
+                <property name="can-focus">False</property>
+                <property name="selection-mode">none</property>
                 <child>
                   <object class="GtkListBoxRow" id="listboxrow1">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="pos_grid">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="column_spacing">32</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="column-spacing">32</property>
                         <child>
                           <object class="GtkComboBoxText" id="panel_pos">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="active">0</property>
@@ -104,22 +103,43 @@ Author: Alireza |S.N|
                               <item id="center" translatable="yes">Center</item>
                               <item id="left" translatable="yes">Left</item>
                             </items>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="pos_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Position in top panel</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -128,55 +148,71 @@ Author: Alireza |S.N|
                 <child>
                   <object class="GtkListBoxRow" id="extras_listboxrow">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="background_grid1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
                         <child>
                           <object class="GtkLabel" id="remove_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">Remove extra details</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkSwitch" id="remove_extras">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="ex_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">ex: "Music name (extra stuff)" ⟶ "Music name"
 Works for parenthesis, brackets , etc...</property>
                             <attributes>
                               <attribute name="font-desc" value="Cantarell 10"/>
                             </attributes>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">1</property>
                             <property name="width">2</property>
-                          </packing>
+                          </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -185,41 +221,63 @@ Works for parenthesis, brackets , etc...</property>
                 <child>
                   <object class="GtkListBoxRow" id="limit_listboxrow">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="limit_grid">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="column_spacing">32</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="column-spacing">32</property>
                         <child>
                           <object class="GtkLabel" id="search_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Search results limit</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="search_limit">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="text" translatable="yes">130</property>
                             <property name="adjustment">search_adj</property>
                             <property name="numeric">True</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -228,55 +286,71 @@ Works for parenthesis, brackets , etc...</property>
                 <child>
                   <object class="GtkListBoxRow" id="extras_listboxrow1">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="background_grid2">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
                         <child>
                           <object class="GtkLabel" id="search_labe">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">Auto search</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkSwitch" id="auto_search">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="active">True</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="ex_label1">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">Search lyrics automatically while playing a song</property>
                             <attributes>
                               <attribute name="font-desc" value="Cantarell 10"/>
                             </attributes>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">1</property>
                             <property name="width">2</property>
-                          </packing>
+                          </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -285,55 +359,71 @@ Works for parenthesis, brackets , etc...</property>
                 <child>
                   <object class="GtkListBoxRow" id="extras_listboxrow2">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="background_grid3">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
                         <child>
                           <object class="GtkLabel" id="remove_label2">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">Save lyrics</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkSwitch" id="save_lyrics">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="active">True</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="ex_label2">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">Save lyrics for offline use</property>
                             <attributes>
                               <attribute name="font-desc" value="Cantarell 10"/>
                             </attributes>
-                          </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">1</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">1</property>
                             <property name="width">2</property>
-                          </packing>
+                          </layout>
+                          </object>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -342,53 +432,71 @@ Works for parenthesis, brackets , etc...</property>
                 <child>
                   <object class="GtkListBoxRow" id="cache_listboxrow">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="cache_grid">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="column_spacing">32</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="column-spacing">32</property>
                         <child>
                           <object class="GtkLabel" id="cache_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Downloaded data:</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkButton" id="clear_cahe">
                             <property name="label" translatable="yes">Clear data</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
-                            <property name="image">delete_img</property>
-                            <property name="always_show_image">True</property>
+                            
+                          <layout>
+                            <property name="column">2</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">2</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkLabel" id="cache_size">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">0 MB</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -396,33 +504,33 @@ Works for parenthesis, brackets , etc...</property>
                 </child>
               </object>
             </child>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
-          </packing>
+          </layout>
+          </object>
         </child>
       </object>
     </child>
     <child type="tab">
       <object class="GtkLabel" id="settings_label">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="label" translatable="yes">Settings</property>
+      <layout>
+        <property name="tab-fill">False</property>
+      </layout>
       </object>
-      <packing>
-        <property name="tab_fill">False</property>
-      </packing>
     </child>
     <child>
       <object class="GtkBox" id="about_box1">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="margin_left">12</property>
-        <property name="margin_right">12</property>
-        <property name="margin_top">12</property>
-        <property name="margin_bottom">12</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">12</property>
+        <property name="margin-end">12</property>
+        <property name="margin-top">12</property>
+        <property name="margin-bottom">12</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <property name="orientation">vertical</property>
@@ -430,55 +538,75 @@ Works for parenthesis, brackets , etc...</property>
         <child>
           <object class="GtkFrame" id="img_frame">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="label_xalign">0</property>
-            <property name="label_yalign">0</property>
-            <property name="shadow_type">in</property>
+            <property name="can-focus">False</property>
+            <property name="label-xalign">0</property>
             <child>
               <object class="GtkListBox" id="cover_listbox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="selection_mode">none</property>
+                <property name="can-focus">False</property>
+                <property name="selection-mode">none</property>
                 <child>
                   <object class="GtkListBoxRow" id="extras_listboxrow3">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="background_grid4">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
                         <child>
                           <object class="GtkLabel" id="panel_width_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">start</property>
                             <property name="label" translatable="yes">Panel Width</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="panel_width">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="text" translatable="yes">400</property>
-                            <property name="input_purpose">digits</property>
+                            <property name="numeric">True</property>
                             <property name="adjustment">width_adj</property>
                             <property name="numeric">True</property>
                             <property name="value">400</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -487,43 +615,65 @@ Works for parenthesis, brackets , etc...</property>
                 <child>
                   <object class="GtkListBoxRow" id="cover_listboxrow">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="cover_grid1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="column_spacing">32</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="column-spacing">32</property>
                         <child>
                           <object class="GtkLabel" id="cover_label2">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="valign">center</property>
                             <property name="vexpand">True</property>
                             <property name="label" translatable="yes">Show album cover</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkSwitch" id="enable_cover">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="halign">end</property>
                             <property name="valign">center</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <property name="active">True</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -532,43 +682,65 @@ Works for parenthesis, brackets , etc...</property>
                 <child>
                   <object class="GtkListBoxRow" id="cover_listboxrow1">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="cover_grid">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="column_spacing">32</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="column-spacing">32</property>
                         <child>
                           <object class="GtkLabel" id="cover_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Cover image size</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="cover_size">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
+                            <property name="can-focus">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="text" translatable="yes">130</property>
-                            <property name="input_purpose">digits</property>
+                            <property name="numeric">True</property>
                             <property name="adjustment">img_adj</property>
                             <property name="numeric">True</property>
                             <property name="value">170</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -579,64 +751,84 @@ Works for parenthesis, brackets , etc...</property>
             <child type="label_item">
               <placeholder/>
             </child>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">0</property>
-          </packing>
+          </layout>
+          </object>
         </child>
         <child>
           <object class="GtkFrame" id="lyrics_frame">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_bottom">15</property>
-            <property name="label_xalign">0</property>
-            <property name="label_yalign">1</property>
-            <property name="shadow_type">in</property>
+            <property name="can-focus">False</property>
+            <property name="margin-bottom">15</property>
+            <property name="label-xalign">0</property>
             <child>
               <object class="GtkListBox" id="lyrics_listbox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="selection_mode">none</property>
+                <property name="can-focus">False</property>
+                <property name="selection-mode">none</property>
                 <child>
                   <object class="GtkListBoxRow" id="font_listboxrow">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="font_grid">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="column_spacing">32</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="column-spacing">32</property>
                         <child>
                           <object class="GtkLabel" id="font_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Lyrics font</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkFontButton" id="font_chooser">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="font">Sans 12</property>
-                            <property name="preview_text"/>
+                            <property name="preview-text"/>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -645,31 +837,32 @@ Works for parenthesis, brackets , etc...</property>
                 <child>
                   <object class="GtkListBoxRow" id="align_listboxrow">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="align_grid">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="column_spacing">32</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="column-spacing">32</property>
                         <child>
                           <object class="GtkLabel" id="align_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Lyrics text align</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkComboBoxText" id="lyrics_align">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
                             <property name="active">1</property>
@@ -678,11 +871,32 @@ Works for parenthesis, brackets , etc...</property>
                               <item id="center" translatable="yes">Center</item>
                               <item id="left" translatable="yes">Left</item>
                             </items>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -691,43 +905,64 @@ Works for parenthesis, brackets , etc...</property>
                 <child>
                   <object class="GtkListBoxRow" id="align_listboxrow1">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
+                    <property name="can-focus">True</property>
                     <child>
+                      <!-- n-columns=3 n-rows=3 -->
                       <object class="GtkGrid" id="text_color">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="margin_left">12</property>
-                        <property name="margin_right">12</property>
-                        <property name="margin_top">12</property>
-                        <property name="margin_bottom">12</property>
-                        <property name="column_spacing">32</property>
+                        <property name="can-focus">False</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <property name="margin-top">12</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="column-spacing">32</property>
                         <child>
                           <object class="GtkColorButton" id="color_picker">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
                             <property name="halign">end</property>
                             <property name="hexpand">True</property>
-                            <property name="use_alpha">True</property>
+                            <property name="use-alpha">True</property>
                             <property name="rgba">rgb(0,0,0)</property>
+                          <layout>
+                            <property name="column">1</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">1</property>
-                            <property name="top_attach">0</property>
-                          </packing>
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="use_color">
                             <property name="label" translatable="yes">Use custom text color</property>
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">False</property>
-                            <property name="draw_indicator">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">False</property>
+                          <layout>
+                            <property name="column">0</property>
+                            <property name="row">0</property>
+                          </layout>
                           </object>
-                          <packing>
-                            <property name="left_attach">0</property>
-                            <property name="top_attach">0</property>
-                          </packing>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
+                        </child>
+                        <child>
+                          <placeholder/>
                         </child>
                       </object>
                     </child>
@@ -735,37 +970,37 @@ Works for parenthesis, brackets , etc...</property>
                 </child>
               </object>
             </child>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
-          </packing>
+          </layout>
+          </object>
         </child>
-      </object>
-      <packing>
+      <layout>
         <property name="position">1</property>
-      </packing>
+      </layout>
+      </object>
     </child>
     <child type="tab">
       <object class="GtkLabel" id="about_label1">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="label" translatable="yes">Appearance</property>
-      </object>
-      <packing>
+      <layout>
         <property name="position">1</property>
-        <property name="tab_fill">False</property>
-      </packing>
+        <property name="tab-fill">False</property>
+      </layout>
+      </object>
     </child>
     <child>
       <object class="GtkBox" id="about_box">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="margin_left">20</property>
-        <property name="margin_right">20</property>
-        <property name="margin_top">20</property>
-        <property name="margin_bottom">20</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">20</property>
+        <property name="margin-end">20</property>
+        <property name="margin-top">20</property>
+        <property name="margin-bottom">20</property>
         <property name="hexpand">True</property>
         <property name="vexpand">True</property>
         <property name="orientation">vertical</property>
@@ -773,200 +1008,199 @@ Works for parenthesis, brackets , etc...</property>
         <child>
           <object class="GtkImage" id="logo">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="pixbuf">music3-symbolic.svg</property>
-          </object>
-          <packing>
+            <property name="can-focus">False</property>
+            <property name="icon-size">GTK_ICON_SIZE_LARGE</property>
+            <property name="file">.local/share/gnome-shell/extensions/LyricsFinder@alireza6677.gmail.com/music3-symbolic.svg</property>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="padding">10</property>
             <property name="position">0</property>
-          </packing>
+          </layout>
+          </object>
         </child>
         <child>
           <object class="GtkLabel" id="extension_name">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label">Gnome Lyrics Finder</property>
             <attributes>
               <attribute name="font-desc" value="Cantarell Bold 14"/>
             </attributes>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
-          </packing>
+          </layout>
+          </object>
         </child>
         <child>
           <object class="GtkBox" id="version_box">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">center</property>
-            <property name="margin_bottom">12</property>
+            <property name="margin-bottom">12</property>
             <child>
               <object class="GtkLabel" id="extension_version_label">
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Gnome shell extension version: </property>
-              </object>
-              <packing>
+              <layout>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
-              </packing>
+              </layout>
+              </object>
             </child>
             <child>
               <object class="GtkLabel" id="extension_version">
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="halign">start</property>
                 <property name="label">unknown</property>
-              </object>
-              <packing>
+              <layout>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
-              </packing>
+              </layout>
+              </object>
             </child>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">2</property>
-          </packing>
+          </layout>
+          </object>
         </child>
         <child>
           <object class="GtkLabel" id="extension_description">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="label" translatable="yes">&lt;b&gt;Finding lyrics has never been this easy.
-Just play a music !&lt;/b&gt;</property>
-            <property name="use_markup">True</property>
+Just play some music !&lt;/b&gt;</property>
+            <property name="use-markup">True</property>
             <property name="justify">center</property>
             <property name="wrap">True</property>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">3</property>
-          </packing>
+          </layout>
+          </object>
         </child>
         <child>
           <object class="GtkBox" id="maintainer_box">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">center</property>
             <property name="spacing">8</property>
             <child>
               <object class="GtkLabel" id="maintainer_label">
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Maintained by &lt;b&gt;Alireza S.N&lt;/b&gt;</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
+                <property name="use-markup">True</property>
+              <layout>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
-              </packing>
+              </layout>
+              </object>
             </child>
             <child>
               <object class="GtkLabel" id="email_label">
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label">alireza6677@gmail.com</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
+                <property name="use-markup">True</property>
+              <layout>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
-              </packing>
+              </layout>
+              </object>
             </child>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">4</property>
-          </packing>
+          </layout>
+          </object>
         </child>
         <child>
           <object class="GtkLinkButton" id="homepage_link">
             <property name="label" translatable="yes">http://github.com/TheWeirdDev/lyrics-finder-gnome-ext</property>
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="receives_default">True</property>
-            <property name="events"/>
+            <property name="can-focus">False</property>
+            <property name="receives-default">True</property>
             <property name="halign">center</property>
-            <property name="relief">none</property>
             <property name="uri">http://github.com/TheWeirdDev/lyrics-finder-gnome-ext</property>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">5</property>
-          </packing>
+          </layout>
+          </object>
         </child>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="orientation">vertical</property>
             <property name="spacing">12</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Thanks to  "Media player indicator"  &amp; "Bing wallpaper changer" Gnome shell extensions.</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
                 <attributes>
                   <attribute name="style" value="italic"/>
                 </attributes>
-              </object>
-              <packing>
+              <layout>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">0</property>
-              </packing>
+              </layout>
+              </object>
             </child>
             <child>
               <object class="GtkLabel" id="GNU_label">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="can-focus">True</property>
                 <property name="label" translatable="yes">&lt;span size="small"&gt;This program comes with ABSOLUTELY NO WARRANTY.
 See the &lt;a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"&gt;GNU General Public License, version 3 or later&lt;/a&gt; for details.&lt;/span&gt;</property>
-                <property name="use_markup">True</property>
+                <property name="use-markup">True</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
-              </object>
-              <packing>
+              <layout>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="position">1</property>
-              </packing>
+              </layout>
+              </object>
             </child>
-          </object>
-          <packing>
+          <layout>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
+            <property name="pack-type">end</property>
             <property name="position">6</property>
-          </packing>
+          </layout>
+          </object>
         </child>
-      </object>
-      <packing>
+      <layout>
         <property name="position">2</property>
-      </packing>
+      </layout>
+      </object>
     </child>
     <child type="tab">
       <object class="GtkLabel" id="about_label">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="label" translatable="yes">About</property>
-      </object>
-      <packing>
+      <layout>
         <property name="position">2</property>
-        <property name="tab_fill">False</property>
-      </packing>
+        <property name="tab-fill">False</property>
+      </layout>
+      </object>
     </child>
   </object>
 </interface>

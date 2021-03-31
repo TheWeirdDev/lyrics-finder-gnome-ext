@@ -71,8 +71,8 @@ function buildPrefsWidget() {
 
     // Font chooser
     fontChooser.set_font(`${settings.get_string(Keys.FONT_NAME)} ${settings.get_int(Keys.TEXT_SIZE)}`);
-    fontChooser.connect('font_set', function (widget) {
-        const fullName = widget.get_font_name().split(' ');
+    fontChooser.connect("font-set", function (widget) {
+        const fullName = fontChooser.get_font().split(' ');
         const size = parseInt(fullName[fullName.length - 1]);
 
         const name = fullName.slice(0, fullName.length - 1).join(' ');
@@ -89,10 +89,10 @@ function buildPrefsWidget() {
     settings.bind(Keys.USE_COLOR, useColor, 'active', Gio.SettingsBindFlags.DEFAULT);
 
     let _color = getColorByHexadecimal(settings.get_string(Keys.COLOR));
-    colorPicker.set_color(_color);
+    colorPicker.set_rgba(_color);
 
     colorPicker.connect('color-set', function (innerColor) {
-        settings.set_string(Keys.COLOR, getHexadecimalByColor(innerColor.get_color()));
+        settings.set_string(Keys.COLOR, getHexadecimalByColor(innerColor.get_rgba()));
     });
 
 
@@ -133,46 +133,23 @@ function buildPrefsWidget() {
         }
         calculateCacheSize();
     });
-
-    box.show_all();
+    box.show();
 
     return box;
 }
 
-function _scaleRound(value) {
-    value = Math.floor((value / 255) + 0.5);
-    value = Math.max(value, 0);
-    value = Math.min(value, 255);
-    return value;
-}
-
-function _dec2Hex(value) {
-    value = value.toString(16);
-
-    while (value.length < 2) {
-        value = '0' + value;
-    }
-
-    return value;
-}
 
 function getColorByHexadecimal(hex) {
-    let colorArray = Gdk.Color.parse(hex);
-    let color = null;
-
-    if (colorArray[0]) {
-        color = colorArray[1];
-    } else {
-        // On any error, default to red
-        color = new Gdk.Color({ red: 65535 });
+    let color = new Gdk.RGBA();
+    if (!color.parse(hex)) {
+        color = new Gdk.RGBA({ red: 1 });
     }
-
     return color;
 }
 
 function getHexadecimalByColor(color) {
-    let red = _scaleRound(color.red);
-    let green = _scaleRound(color.green);
-    let blue = _scaleRound(color.blue);
-    return '#' + _dec2Hex(red) + _dec2Hex(green) +  _dec2Hex(blue);
+    let red = Math.floor(color.red * 255).toString(16).padStart(2, "0");
+    let green = Math.floor(color.green * 255).toString(16).padStart(2, "0");
+    let blue = Math.floor(color.blue * 255).toString(16).padStart(2, "0");
+    return '#' + red + green + blue;
 }

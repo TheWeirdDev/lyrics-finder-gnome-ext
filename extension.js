@@ -1,13 +1,14 @@
 const Animation = imports.ui.animation;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
 const Gio = imports.gi.Gio;
+const GLib = imports.gi.GLib;
 const Lang = imports.lang;
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 const Pango = imports.gi.Pango;
-const Shell = imports.gi.Shell;
 const Clutter = imports.gi.Clutter;
 const GObject = imports.gi.GObject;
 const GdkPixbuf = imports.gi.GdkPixbuf;
@@ -21,8 +22,8 @@ const Storage = Me.imports.storage;
 const Convenience = Me.imports.convenience;
 const Keys = Me.imports.keys;
 
-const ALIGN_MIDDLE_X = { x_fill: false, x_align: St.Align.MIDDLE };
-const ALIGN_MIDDLE_Y = { y_fill: false, y_align: St.Align.MIDDLE };
+const ALIGN_MIDDLE_X = { x_expand: false, x_align: Clutter.ActorAlign.CENTER };
+const ALIGN_MIDDLE_Y = { y_expand: false, y_align: Clutter.ActorAlign.CENTER };
 
 const settings = Convenience.getSettings();
 
@@ -38,13 +39,13 @@ const LyricsPanel = GObject.registerClass(
             activate: false,
             can_focus: true,
         });
-        this.lyrics = '... No lyrics ...\nJust play a music!';
+        this.lyrics = '... No lyrics ...\nJust play some music!';
         this.hasLyrics = false;
 
         this.label = new St.Label({
             text: this.lyrics,
-            style: this.getLyricsStyle()
-
+            style: this.getLyricsStyle(),
+            ...ALIGN_MIDDLE_X
         });
         this.label.clutter_text.line_wrap = true;
         this.label.clutter_text.line_wrap_mode = Pango.WrapMode.WORD_CHAR;
@@ -63,7 +64,8 @@ const LyricsPanel = GObject.registerClass(
             label: 'Copy lyrics',
             reactive: true,
             can_focus: true,
-            style_class: 'system-menu-action'
+            style_class: 'system-menu-action',
+            ...ALIGN_MIDDLE_X
         });
         this.copyBtn.connect('clicked', () => {
             if (this.hasLyrics)
@@ -78,9 +80,10 @@ const LyricsPanel = GObject.registerClass(
         this.scrollView.add_actor(this.box);
         this.icon = new St.Icon({
             icon_size: this.getCoverSize(),
+            ...ALIGN_MIDDLE_X
         });
 
-        this.box.add(this.icon, ALIGN_MIDDLE_X);
+        this.box.add_child(this.icon);
 
         if (!this.isCoverEnabled()) {
             this.icon.hide();
@@ -97,10 +100,10 @@ const LyricsPanel = GObject.registerClass(
             }
         });
 
-        this.box.add(this.copyBtn, ALIGN_MIDDLE_X);
-        this.box.add(this.label, ALIGN_MIDDLE_X);
+        this.box.add_child(this.copyBtn);
+        this.box.add_child(this.label);
         this.set_vertical(true);
-        this.add(this.scrollView);
+        this.add_child(this.scrollView);
 
         settings.connect('changed::' + Keys.COVER_SIZE, () => {
             this.icon.icon_size = this.getCoverSize();
@@ -201,7 +204,7 @@ const LyricsPanel = GObject.registerClass(
     }
 
     reset() {
-        this.setLyrics('... No lyrics ...\nJust play a music!', Me.path + '/album-art-empty.png');
+        this.setLyrics('... No lyrics ...\nJust play some music!', Me.path + '/album-art-empty.png');
         this.hasLyrics = false;
         this.copyBtn.hide();
     }
@@ -230,8 +233,12 @@ const LyricsPopup = GObject.registerClass(
     createUi() {
 
         this.spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
-        this.spinner = null;
-        this.loadtxt = null;
+        this.spinner = new Animation.AnimatedIcon(this.spinnerIcon, 16);
+        this.spinner.x_align = Clutter.ActorAlign.CENTER;
+        this.spinner.x_expand = true;
+        this.spinner.play();
+        this.loadtxt = new St.Label({ text: "Searching..." , ...ALIGN_MIDDLE_X});
+
 
         this.box = new St.BoxLayout({
             vertical: true,
@@ -242,18 +249,20 @@ const LyricsPopup = GObject.registerClass(
             this.box.width = settings.get_int(Keys.PANEL_WIDTH);
         });
 
-        this.add(this.box);
+        this.add_child(this.box);
 
         this.topBox = new St.BoxLayout({
             vertical: false,
             style: 'spacing: 10px;',
+            x_align: Clutter.ActorAlign.CENTER,
+            x_expand: true,
         });
 
         this.searchLabel = new St.Label({
             text: "Lyrics Finder",
             style: 'font-weight: bold',
         });
-        this.topBox.add(this.searchLabel, ALIGN_MIDDLE_Y);
+        this.topBox.add_child(this.searchLabel);
 
         this.prefsBtn = new St.Button({
             child: new St.Icon({
@@ -262,9 +271,9 @@ const LyricsPopup = GObject.registerClass(
             }),
             reactive: true,
             can_focus: true,
-            style_class: 'system-menu-action'
+            style_class: 'button system-menu-action'
         });
-        this.prefsBtn.connect('clicked', launch_extension_prefs);
+        this.prefsBtn.connect('clicked', () => ExtensionUtils.openPrefs());
 
         this.topBox.add_child(this.prefsBtn);
 
@@ -279,10 +288,10 @@ const LyricsPopup = GObject.registerClass(
             name: "Artist",
             hint_text: 'Artist...',
             track_hover: true,
-            can_focus: true
+            can_focus: true,
         });
 
-        this.box.add(this.topBox, ALIGN_MIDDLE_X);
+        this.box.add_child(this.topBox);
         this.box.add_child(this.titleEntry);
         this.box.add_child(this.artistEntry);
 
@@ -290,13 +299,18 @@ const LyricsPopup = GObject.registerClass(
             vertical: false,
             style: 'spacing: 3px;',
         });
-        this.SearchBox.add(new St.Icon({ icon_name: 'system-search-symbolic', icon_size: 20 }), ALIGN_MIDDLE_Y);
-        this.SearchBox.add(new St.Label({ text: 'Search' }), ALIGN_MIDDLE_Y);
+        this.SearchBox.add_child(new St.Icon({ 
+            icon_name: 'system-search-symbolic',
+            icon_size: 20 ,
+            ...ALIGN_MIDDLE_Y
+        }));
+        this.SearchBox.add_child(new St.Label({ text: 'Search' , ...ALIGN_MIDDLE_Y}));
 
         this.search_btn = new St.Button({
             child: this.SearchBox,
             reactive: true,
-            style_class: 'system-menu-action'
+            style_class: 'button system-menu-action',
+            ...ALIGN_MIDDLE_X
         });
 
         this.search_btn.connect('clicked', Lang.bind(this, function () {
@@ -315,7 +329,8 @@ const LyricsPopup = GObject.registerClass(
             search_menu.label.set_text('Found: 0');
         }));
 
-        this.box.add(this.search_btn, ALIGN_MIDDLE_X);
+        this.box.add_child(this.search_btn);
+        
 
         this.manager = new Manager.PlayerManager(Lang.bind(this, function (title, artist) {
             if (!title) {
@@ -345,6 +360,10 @@ const LyricsPopup = GObject.registerClass(
                 search_menu.label.set_text('Found');
             } else {
                 if (settings.get_boolean(Keys.AUTO_SEARCH)) {
+                    // Don't mess up the panel if user skips too many songs
+                    if (this.loading) {
+                        return;
+                    }
                     this.searchSong(title, artist);
                 } else {
                     lrcPanel.reset();
@@ -361,6 +380,8 @@ const LyricsPopup = GObject.registerClass(
         const storage_manager = new Storage.StorageManager();
         lrcPanel.setLyrics(storage_manager.get_lyrics(title, artist),
             storage_manager.get_image(title, artist));
+
+        this.setLoading(false);
     }
 
     searchSong(title, artist) {
@@ -369,12 +390,18 @@ const LyricsPopup = GObject.registerClass(
 
         const storage_manager = new Storage.StorageManager();
 
-        this.setLoading(false);
         this.setLoading(true);
+        // Just to make sure that it will be cleared
+        GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 10, () => {
+            if (this.loading) {
+                this.setLoading(false);
+            }
+            return false;
+        });
 
         this.lyrics_finder.find_lyrics(title, artist,
             Lang.bind(this, function (songs) {
-
+                this.setLoading(false);
                 search_menu.menu.removeAll();
                 search_menu.label.set_text(`Found: ${songs.length}`);
 
@@ -389,30 +416,18 @@ const LyricsPopup = GObject.registerClass(
                 } else {
                     search_menu.menu.addMenuItem(new Lyrics.LyricsItem({ name: "No lyrics found", artists: [{ name: "Error" }] }));
                 }
-
-                this.setLoading(false);
-
             }));
     }
 
     setLoading(state) {
         this.loading = state;
-        if (!state) {
-            if (this.spinner != null) {
-                this.spinner.actor.destroy();
-                this.spinner = null;
-            }
-            if (this.loadtxt != null) {
-                this.loadtxt.destroy();
-                this.loadtxt = null;
-            }
-            return;
+        if (state) {
+            this.box.add_child(this.loadtxt);
+            this.box.add_child(this.spinner);
+        } else {
+            this.box.remove_child(this.loadtxt);
+            this.box.remove_child(this.spinner);
         }
-        this.spinner = new Animation.AnimatedIcon(this.spinnerIcon, 16);
-        this.spinner.play();
-        this.loadtxt = new St.Label({ text: "Searching..." });
-        this.box.add(this.loadtxt, ALIGN_MIDDLE_X);
-        this.box.add_child(this.spinner.actor);
     }
 
     disconnect() {
@@ -447,17 +462,6 @@ var LyricsFinderPanelButton = GObject.registerClass(class LyricsFinderPanelButto
         this.menu.addMenuItem(lrcPanel);
     }
 });
-
-function launch_extension_prefs() {
-    const appSys = Shell.AppSystem.get_default();
-    const app = appSys.lookup_app('org.gnome.Extensions.desktop');
-    const info = app.get_app_info();
-    const timestamp = global.display.get_current_time_roundtrip();
-    info.launch_uris(
-        ['extension:///' + Me.metadata.uuid],
-        global.create_app_launch_context(timestamp, -1)
-    );
-}
 
 
 function init() {

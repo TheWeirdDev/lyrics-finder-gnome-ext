@@ -4,6 +4,7 @@ const Soup = imports.gi.Soup;
 const St = imports.gi.St;
 const PopupMenu = imports.ui.popupMenu;
 const Gio = imports.gi.Gio;
+const Clutter = imports.gi.Clutter;
 const Convenience = Me.imports.convenience;
 const Keys = Me.imports.keys;
 const settings = Convenience.getSettings();
@@ -12,22 +13,20 @@ const GObject = imports.gi.GObject;
 var LyricsFinder = class LyricsFinder {
 
     constructor() {
-        this.httpSession = new Soup.SessionAsync();
-        Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
+        this.httpSession = new Soup.Session();
+        this.httpSession.add_feature(new Soup.ProxyResolverDefault());
+        this.httpSession.timeout = 10;
 
     }
 
     find_lyrics(title, artist, callback) {
         const limit = settings.get_int(Keys.SEARCH_LIMIT);
-        this.request = Soup.Message.new('POST', `http://music.163.com/api/search/pc?s=${title} ${artist}&type=1&limit=${limit}`);
+        this.request = Soup.Message.new('POST', `http://music.163.com/api/search/pc?s=${encodeURI(title + ' '+ artist)}&type=1&limit=${limit}`);
         this.httpSession.queue_message(this.request, (httpSession, message) => {
             if (message.status_code == 200) {
                 const data = JSON.parse(message.response_body.data);
-                if (data.code == 200) {
-                    if (data.result.songCount < 1)
-                        callback([]);
-                    else
-                        callback(Array.from(data.result.songs));
+                if (data.code == 200 && data.result.songCount >= 1) {
+                    callback(Array.from(data.result.songs));
                 } else {
                     callback([]);
                 }
@@ -73,13 +72,17 @@ var LyricsItem = GObject.registerClass(class Lyrics_Item extends PopupMenu.Popup
         });
 
         const box2 = new St.BoxLayout({ vertical: false });
-        const label1 = new St.Label({ text: `${this.name} - ${this.artist}` });
+        const label1 = new St.Label({
+            text: `${this.name} - ${this.artist}`,
+            y_expand: false,
+            y_align: Clutter.ActorAlign.CENTER
+        });
         this.vbox.add_child(icon2);
         this.vbox.add_child(box2);
-        box2.add(label1, { y_fill: false, y_align: St.Align.MIDDLE });
+        box2.add_child(label1);
 
         this.httpSession = new Soup.SessionAsync();
-        Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());     
+        Soup.Session.prototype.add_feature.call(this.httpSession, new Soup.ProxyResolverDefault());
 
     }
 
@@ -90,13 +93,13 @@ var LyricsItem = GObject.registerClass(class Lyrics_Item extends PopupMenu.Popup
                 const data = JSON.parse(message.response_body.data);
                 if (data.code == 200) {
                     if (!data.lrc) {
-                        this.lyrics_panel.setLyrics("-- Sorry , No lyrics --", '');
+                        this.lyrics_panel.setLyrics("-- Empty response --", '');
                         return;
                     }
                     this.lyrics = this.removeTimes(data.lrc.lyric);
 
                     this.lyrics_panel.setLyrics(this.lyrics, this.picUrl);
-                    if (settings.get_boolean(Keys.SAVE_LYRICS)){
+                    if (settings.get_boolean(Keys.SAVE_LYRICS)) {
                         this.storage_manager.save(this._title, this._artist, this.lyrics, this.picUrl);
                     }
                 } else {
@@ -109,7 +112,7 @@ var LyricsItem = GObject.registerClass(class Lyrics_Item extends PopupMenu.Popup
     }
 
     removeTimes(lrc) {
-        return lrc.replace(/^\[.*\]/gm, '');
+        return lrc.replace(/^\s*\[.*\]\s*/gm, '');
     }
 
     activate(event) {
