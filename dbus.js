@@ -1,5 +1,4 @@
 const Gio = imports.gi.Gio;
-const Lang = imports.lang;
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 
 const DBusIface = '<node>\

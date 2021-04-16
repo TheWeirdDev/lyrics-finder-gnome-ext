@@ -1,14 +1,10 @@
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Lang = imports.lang;
-const Soup = imports.gi.Soup;
-const St = imports.gi.St;
+const {Soup, St, Gio, GObject, Clutter}  = imports.gi;
 const PopupMenu = imports.ui.popupMenu;
-const Gio = imports.gi.Gio;
-const Clutter = imports.gi.Clutter;
 const Convenience = Me.imports.convenience;
 const Keys = Me.imports.keys;
 const settings = Convenience.getSettings();
-const GObject = imports.gi.GObject;
 
 var LyricsFinder = class LyricsFinder {
 

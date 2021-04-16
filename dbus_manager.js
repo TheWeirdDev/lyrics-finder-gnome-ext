@@ -1,6 +1,5 @@
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const DBusIface = Me.imports.dbus;
-const Lang = imports.lang;
 const MediaInfo = Me.imports.media_info;
 
 var PlayerManager = class Player_Manager {
@@ -14,7 +13,7 @@ var PlayerManager = class Player_Manager {
         // player DBus name pattern
         const name_regex = /^org\.mpris\.MediaPlayer2\./;
 
-        this._dbus.ListNamesRemote(Lang.bind(this, function (names) {
+        this._dbus.ListNamesRemote((names) => {
             const playerNames = [];
             for (let n in names[0]) {
                 const name = names[0][n];
@@ -25,14 +24,14 @@ var PlayerManager = class Player_Manager {
             playerNames.sort();
             for (let i in playerNames) {
                 const player = playerNames[i];
-                this._dbus.GetNameOwnerRemote(player, Lang.bind(this, (owner) => {
+                this._dbus.GetNameOwnerRemote(player, (owner) => {
                     this.add_player(player, owner);
-                }));
+                });
             }
-        }));
+        });
 
-        this._ownerChangedId = this._dbus.connectSignal('NameOwnerChanged', Lang.bind(this,
-            function (proxy, sender, [name, old_owner, new_owner]) {
+        this._ownerChangedId = this._dbus.connectSignal('NameOwnerChanged',
+            (proxy, sender, [name, old_owner, new_owner]) => {
                 if (name_regex.test(name)) {
                     // if (!this._disabling) {
                     if (new_owner && !old_owner) {
@@ -48,7 +47,7 @@ var PlayerManager = class Player_Manager {
                 }
                 // }
             }
-        ));
+        );
     }
 
     add_player(name, owner) {

@@ -1,9 +1,5 @@
 const Me = imports.misc.extensionUtils.getCurrentExtension();
-const Lang = imports.lang;
-const Soup = imports.gi.Soup;
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
-const Shell = imports.gi.Shell;
+const {Soup, Gio, GLib, Shell} = imports.gi;
 const Convenience = Me.imports.convenience;
 const Keys = Me.imports.keys;
 const settings = Convenience.getSettings();
@@ -21,20 +17,20 @@ var StorageManager = class Storage_Manager {
         const request = Soup.Message.new('GET', url);
 
         // got_chunk event
-        request.connect('got_chunk', Lang.bind(this, function (message, chunk) {
+        request.connect('got_chunk', (message, chunk) => {
             if (message.status_code == 200) {
                 fstream.write(chunk.get_data(), null);
             }
-        }));
+        });
 
         const httpSession = new Soup.SessionAsync();
-        httpSession.queue_message(request, Lang.bind(this, function (httpSession, message) {
+        httpSession.queue_message(request, (httpSession, message) => {
             // request completed
             fstream.close(null);
             if (message.status_code != 200) {
                 file.delete(null);
             }
-        }));
+        });
     }
 
     _save_lyrics(title, artist, lyrics) {

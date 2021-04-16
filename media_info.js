@@ -1,6 +1,5 @@
 const Me = imports.misc.extensionUtils.getCurrentExtension();
 const DBusIface = Me.imports.dbus;
-const Lang = imports.lang;
 
 var MediaInfo = class Media_Info {
 
@@ -8,27 +7,27 @@ var MediaInfo = class Media_Info {
         this.owner = owner;
 
         new DBusIface.Properties(busName,
-            Lang.bind(this, function (proxy) {
+            (proxy) => {
                 this._prop = proxy;
                 this._ready();
-            }));
+            });
 
         new DBusIface.MediaServer2Player(busName,
-            Lang.bind(this, function (proxy) {
+            (proxy) => {
                 this._mediaServerPlayer = proxy;
                 this._server_ready();
-            }));
+            });
 
         this._callback = callback;
     }
 
     _ready() {
-        this._propChangedId = this._prop.connectSignal('PropertiesChanged', Lang.bind(this, function (proxy, sender, [iface, props]) {
-            if (!props.Metadata)
-                return;
-
-            this.parse_data(props.Metadata.deep_unpack());
-        }));
+        this._propChangedId = this._prop.connectSignal('PropertiesChanged',
+            (proxy, sender, [iface, props]) => {
+                if (!props.Metadata)
+                    return;
+                this.parse_data(props.Metadata.deep_unpack());
+        });
     }
 
     _server_ready(){

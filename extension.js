@@ -1,17 +1,10 @@
 const Animation = imports.ui.animation;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
-const Gio = imports.gi.Gio;
-const GLib = imports.gi.GLib;
-const Lang = imports.lang;
-const St = imports.gi.St;
+const {Gio, GLib, St, Pango, Clutter, GObject, GdkPixbuf}  = imports.gi;
 const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
-const Pango = imports.gi.Pango;
-const Clutter = imports.gi.Clutter;
-const GObject = imports.gi.GObject;
-const GdkPixbuf = imports.gi.GdkPixbuf;
 
 const Clipboard = St.Clipboard.get_default();
 const CLIPBOARD_TYPE = St.ClipboardType.CLIPBOARD;
@@ -64,7 +57,7 @@ const LyricsPanel = GObject.registerClass(
             label: 'Copy lyrics',
             reactive: true,
             can_focus: true,
-            style_class: 'system-menu-action',
+            style_class: 'button system-menu-action',
             ...ALIGN_MIDDLE_X
         });
         this.copyBtn.connect('clicked', () => {
@@ -309,7 +302,7 @@ const LyricsPopup = GObject.registerClass(
             ...ALIGN_MIDDLE_X
         });
 
-        this.search_btn.connect('clicked', Lang.bind(this, function () {
+        this.search_btn.connect('clicked', () => {
             if (this.loading) {
                 return;
             }
@@ -323,11 +316,11 @@ const LyricsPopup = GObject.registerClass(
             this.searchSong(title, artist);
             search_menu.menu.removeAll();
             search_menu.label.set_text('Found: 0');
-        }));
+        });
 
         this.box.add_child(this.search_btn);
 
-        this.manager = new Manager.PlayerManager(Lang.bind(this, function (title, artist) {
+        this.manager = new Manager.PlayerManager((title, artist) => {
             if (!title) {
                 title = artist = '';
                 this.titleEntry.text = title;
@@ -363,7 +356,7 @@ const LyricsPopup = GObject.registerClass(
                 }
             }
 
-        }));
+        });
     }
 
     loadSong(title, artist) {
@@ -391,7 +384,7 @@ const LyricsPopup = GObject.registerClass(
         });
 
         this.lyrics_finder.find_lyrics(title, artist,
-            Lang.bind(this, function (songs) {
+            (songs) => {
                 this.setLoading(false);
                 search_menu.menu.removeAll();
                 search_menu.label.set_text(`Found: ${songs.length}`);
@@ -407,7 +400,7 @@ const LyricsPopup = GObject.registerClass(
                 } else {
                     search_menu.menu.addMenuItem(new Lyrics.LyricsItem({ name: "No lyrics found", artists: [{ name: "Error" }] }));
                 }
-            }));
+            });
     }
 
     setLoading(state) {
