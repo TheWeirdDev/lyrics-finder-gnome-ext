@@ -225,20 +225,16 @@ const LyricsPopup = GObject.registerClass(
 
         this.lyrics_finder = new Lyrics.LyricsFinder();
 
-
         this.createUi();
-
     }
 
     createUi() {
-
         this.spinnerIcon = Gio.File.new_for_uri('resource:///org/gnome/shell/theme/process-working.svg');
         this.spinner = new Animation.AnimatedIcon(this.spinnerIcon, 16);
         this.spinner.x_align = Clutter.ActorAlign.CENTER;
         this.spinner.x_expand = true;
         this.spinner.play();
         this.loadtxt = new St.Label({ text: "Searching..." , ...ALIGN_MIDDLE_X});
-
 
         this.box = new St.BoxLayout({
             vertical: true,
@@ -299,7 +295,7 @@ const LyricsPopup = GObject.registerClass(
             vertical: false,
             style: 'spacing: 3px;',
         });
-        this.SearchBox.add_child(new St.Icon({ 
+        this.SearchBox.add_child(new St.Icon({
             icon_name: 'system-search-symbolic',
             icon_size: 20 ,
             ...ALIGN_MIDDLE_Y
@@ -330,7 +326,6 @@ const LyricsPopup = GObject.registerClass(
         }));
 
         this.box.add_child(this.search_btn);
-        
 
         this.manager = new Manager.PlayerManager(Lang.bind(this, function (title, artist) {
             if (!title) {
@@ -356,14 +351,12 @@ const LyricsPopup = GObject.registerClass(
             const storage_manager = new Storage.StorageManager();
 
             if (storage_manager.is_lyrics_available(title, artist)) {
+                this.lyrics_finder.cancel_last_search();
                 this.loadSong(title, artist);
+                search_menu.menu.removeAll();
                 search_menu.label.set_text('Found');
             } else {
                 if (settings.get_boolean(Keys.AUTO_SEARCH)) {
-                    // Don't mess up the panel if user skips too many songs
-                    if (this.loading) {
-                        return;
-                    }
                     this.searchSong(title, artist);
                 } else {
                     lrcPanel.reset();
@@ -371,9 +364,8 @@ const LyricsPopup = GObject.registerClass(
             }
 
         }));
-
     }
-    
+
     loadSong(title, artist) {
         lrcPanel.reset();
 
@@ -385,7 +377,6 @@ const LyricsPopup = GObject.registerClass(
     }
 
     searchSong(title, artist) {
-
         lrcPanel.reset();
 
         const storage_manager = new Storage.StorageManager();

@@ -16,13 +16,23 @@ var LyricsFinder = class LyricsFinder {
         this.httpSession = new Soup.Session();
         this.httpSession.add_feature(new Soup.ProxyResolverDefault());
         this.httpSession.timeout = 10;
+        this.request = null;
+    }
 
+    cancel_last_search() {
+        if (this.request != null) {
+            this.httpSession.cancel_message(this.request, Soup.Status.CANCELLED);
+        }
     }
 
     find_lyrics(title, artist, callback) {
         const limit = settings.get_int(Keys.SEARCH_LIMIT);
+        // Cancel the ongoing message
+        this.cancel_last_search();
         this.request = Soup.Message.new('POST', `http://music.163.com/api/search/pc?s=${encodeURI(title + ' '+ artist)}&type=1&limit=${limit}`);
         this.httpSession.queue_message(this.request, (httpSession, message) => {
+            if (message.status_code == Soup.Status.CANCELLED)
+                return;
             if (message.status_code == 200) {
                 const data = JSON.parse(message.response_body.data);
                 if (data.code == 200 && data.result.songCount >= 1) {

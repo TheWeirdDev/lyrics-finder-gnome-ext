@@ -42,19 +42,17 @@ var MediaInfo = class Media_Info {
 
         const title = metadata["xesam:title"] ? metadata["xesam:title"].unpack() : "";
 
-        let trackArtist = metadata["xesam:artist"] ? metadata["xesam:artist"].deep_unpack().toString() : "";
-        trackArtist = metadata["rhythmbox:streamTitle"] ? metadata["rhythmbox:streamTitle"].unpack() : trackArtist;
+        let artist = metadata["xesam:artist"] ? metadata["xesam:artist"].deep_unpack().toString() : "";
+        artist = metadata["rhythmbox:streamTitle"] ? metadata["rhythmbox:streamTitle"].unpack() : artist;
         if (title.trim().length == 0){
-            this._callback();
+            this._callback(null, null);
             return;
         }
-
-        const txt = `${title} : ${trackArtist}`;
-        this._callback(title,trackArtist);
+        this._callback(title, artist);
     }
 
     disconnect() {
         this._prop.disconnectSignal(this._propChangedId);
-        this._callback();
+        this._callback(null, null);
     }
 }
