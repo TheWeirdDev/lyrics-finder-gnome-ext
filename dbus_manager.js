@@ -15,15 +15,13 @@ var PlayerManager = class Player_Manager {
 
         this._dbus.ListNamesRemote((names) => {
             const playerNames = [];
-            for (let n in names[0]) {
-                const name = names[0][n];
+            for (let name of names[0]) {
                 if (name_regex.test(name)) {
                     playerNames.push(name);
                 }
             }
             playerNames.sort();
-            for (let i in playerNames) {
-                const player = playerNames[i];
+            for (let player of playerNames) {
                 this._dbus.GetNameOwnerRemote(player, (owner) => {
                     this.add_player(player, owner);
                 });
