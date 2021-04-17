@@ -15,13 +15,13 @@ var PlayerManager = class Player_Manager {
 
         this._dbus.ListNamesRemote((names) => {
             const playerNames = [];
-            for (let name of names[0]) {
+            for (const name of names[0]) {
                 if (name_regex.test(name)) {
                     playerNames.push(name);
                 }
             }
             playerNames.sort();
-            for (let player of playerNames) {
+            for (const player of playerNames) {
                 this._dbus.GetNameOwnerRemote(player, (owner) => {
                     this.add_player(player, owner);
                 });
@@ -67,7 +67,7 @@ var PlayerManager = class Player_Manager {
 
     disconnect_all() {
         try {
-            for (let owner in this.players) {
+            for (const owner in this.players) {
                 this.remove_player(this.players[owner], owner);
             }
             this._dbus.disconnectSignal(this._ownerChangedId);

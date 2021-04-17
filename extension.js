@@ -175,13 +175,11 @@ const LyricsPanel = GObject.registerClass(
         this.hasLyrics = true;
         if (pic) {
             if (this.isCoverEnabled()) {
-                let gicon = Gio.icon_new_for_string(pic);
-
+                const gicon = Gio.icon_new_for_string(pic);
                 if (gicon != null)
                     this.icon.set_gicon(gicon);
-               else
+                else
                    this.icon.icon_name = Me.path + '/album-art-empty.png';
-
                 this.icon.show();
             }
             this.pic = pic;
