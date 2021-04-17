@@ -97,17 +97,14 @@ function buildPrefsWidget() {
         const file_type = file_exists ? file.query_file_type(Gio.FileQueryInfoFlags.NONE, null) : 0;
 
         if (file_exists && file_type == Gio.FileType.DIRECTORY) {
-            const enumerator = file.enumerate_children('*', Gio.FileQueryInfoFlags.NONE, null);
-
-            let file_info;
-            let size = 0;
-            while ((file_info = enumerator.next_file(null)) != null) {
-                size += file_info.get_size();
+            const [result, stdout, , exit_code] = GLib.spawn_sync(null, ['du', '-csb', DATA_DIRECTORY], null, GLib.SpawnFlags.SEARCH_PATH, null);
+            if (result && exit_code == 0) {
+                const size = stdout.toString().split('\t')[0];
+                cacheSize.set_text(GLib.format_size_for_display(parseInt(size)));
+                return;
             }
-            cacheSize.set_text(GLib.format_size(size));
-        } else {
-            cacheSize.set_text(GLib.format_size(0));
         }
+        cacheSize.set_text(GLib.format_size(0));
     }
     calculateCacheSize();
 
