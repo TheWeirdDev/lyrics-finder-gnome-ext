@@ -319,15 +319,13 @@ const LyricsPopup = GObject.registerClass(
         this.box.add_child(this.search_btn);
 
         this.manager = new Manager.PlayerManager((title, artist) => {
+            lrcPanel.reset();
+            search_menu.menu.removeAll();
+            search_menu.label.set_text('Found: 0');
             if (!title) {
                 title = artist = '';
                 this.titleEntry.text = title;
                 this.artistEntry.text = artist;
-
-                lrcPanel.reset();
-
-                search_menu.menu.removeAll();
-                search_menu.label.set_text('Found: 0');
                 return;
             }
             if (settings.get_boolean(Keys.REMOVE_EXTRAS)) {
@@ -346,14 +344,9 @@ const LyricsPopup = GObject.registerClass(
                 this.loadSong(title, artist);
                 search_menu.menu.removeAll();
                 search_menu.label.set_text('Found');
-            } else {
-                if (settings.get_boolean(Keys.AUTO_SEARCH)) {
-                    this.searchSong(title, artist);
-                } else {
-                    lrcPanel.reset();
-                }
+            } else if (settings.get_boolean(Keys.AUTO_SEARCH)) {
+                this.searchSong(title, artist);
             }
-
         });
     }
 
